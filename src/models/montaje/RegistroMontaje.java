@@ -14,7 +14,14 @@ public class RegistroMontaje extends Registro {
     }
 
     @Override
-    String detalles() {
-        return "";
+    public String detalles() {
+        return "🔩 REGISTRO DE MONTAJE\n"
+                + "-----------------------------------------------------------\n"
+                + "🕐 Timestamp:   " + timestamp.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")) + "\n"
+                + "🚗 Vehículo:    " + vehiculo.toString() + "\n"
+                + "🔩 Estado:      " + estadoVehiculo.getNombre() + "\n"
+                + "🔧 Componente:  " + (componente != null ? componente.getNombre() : "—") + "\n"
+                + "👷 Operario:    " + trabajador.getNombre() + " " + trabajador.getApellidos() + "\n"
+                + "📋 Puesto:      " + trabajador.getPuesto();
     }
 }

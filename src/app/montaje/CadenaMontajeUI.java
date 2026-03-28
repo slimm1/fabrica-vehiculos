@@ -51,6 +51,20 @@ public class CadenaMontajeUI extends JDialog {
                 }
             };
 
+            int idx = i;
+            tabla.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseClicked(java.awt.event.MouseEvent e) {
+                    if (e.getClickCount() == 2) {
+                        int fila = tabla.rowAtPoint(e.getPoint());
+                        if (fila < 0) return;
+                        int filaModelo = tabla.convertRowIndexToModel(fila);
+                        Registro registro = cadenas.get(idx).getRegistros().get(filaModelo);
+                        mostrarDetalles(registro);
+                    }
+                }
+            });
+
             tablas[i] = tabla;            tabla.getColumnModel().getColumn(1).setPreferredWidth(160);
             tabla.getColumnModel().getColumn(3).setPreferredWidth(160);
             tabla.setAutoCreateRowSorter(true);
@@ -96,5 +110,26 @@ public class CadenaMontajeUI extends JDialog {
     public void mostrarVentana() {
         cargarRegistros();
         SwingUtilities.invokeLater(() -> setVisible(true));
+    }
+
+    private void mostrarDetalles(Registro registro) {
+        JDialog dialog = new JDialog(this, "Detalles del registro", true);
+        dialog.setSize(700, 300);
+        dialog.setLocationRelativeTo(this);
+        dialog.setLayout(new BorderLayout(10, 10));
+
+        JTextArea area = new JTextArea(registro.detalles());
+        area.setEditable(false);
+        area.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
+        area.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JButton btnCerrar = new JButton("Cerrar");
+        btnCerrar.addActionListener(e -> dialog.dispose());
+        JPanel panelSur = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panelSur.add(btnCerrar);
+
+        dialog.add(new JScrollPane(area), BorderLayout.CENTER);
+        dialog.add(panelSur, BorderLayout.SOUTH);
+        dialog.setVisible(true);
     }
 }

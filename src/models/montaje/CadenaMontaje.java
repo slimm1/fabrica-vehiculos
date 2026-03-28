@@ -20,6 +20,7 @@ public abstract class CadenaMontaje {
     private Set<Integer> pasosConError = new HashSet<>();
     private int pasoActual = 0;
     private int erroresALanzar = 0;
+    private int pasoCaida = -1;
 
     public CadenaMontaje() {
         this.funcionando = true;
@@ -104,6 +105,10 @@ public abstract class CadenaMontaje {
     public boolean hayErrorEnPasoActual() { return pasosConError.contains(pasoActual); }
     public int getErroresALanzar() { return erroresALanzar; }
     public void setErroresALanzar(int errores) { this.erroresALanzar = errores; }
+
+    public int getPasoCaida() { return pasoCaida; }
+    public void setPasoCaida(int pasoCaida) { this.pasoCaida = pasoCaida; }
+    public boolean hayCaidaEnPasoActual() { return pasoActual == pasoCaida; }
 
     public void resetearEstadoSimulacion() {
         this.pasoActual = 0;

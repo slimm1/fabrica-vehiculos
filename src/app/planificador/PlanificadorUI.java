@@ -88,10 +88,9 @@ public class PlanificadorUI extends JDialog implements IPlanificadorUI {
         btnNuevaSimulacion.setEnabled(false);
         btnNuevaSimulacion.addActionListener(e -> limpiarSimulacion());
 
-        btnMuyCompleja.setEnabled(false);
-
         btnSimple.addActionListener(e -> ejecutarSimulacion("Simple"));
         btnCompleja.addActionListener(e -> ejecutarSimulacion("Compleja"));
+        btnMuyCompleja.addActionListener(e -> ejecutarSimulacion("Muy Compleja"));
 
         panelBotones.add(btnSimple);
         panelBotones.add(btnCompleja);

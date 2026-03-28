@@ -114,12 +114,41 @@ public class GestorCadenasMontaje implements IGestorCadenasMontaje {
 
     @Override
     public void iniciarSimulacionMuyCompleja(SimulacionListener listener) throws ColaVehiculosVacia {
-        if (this.colaVehiculos.isEmpty()) {
-            throw new ColaVehiculosVacia();
-        }
+        if (this.colaVehiculos.isEmpty()) throw new ColaVehiculosVacia();
+
         SimulacionMuyCompleja simulacion = new SimulacionMuyCompleja(this);
-        for(Vehiculo v : this.colaVehiculos) {
-            CadenaMontaje cadenaMontaje = this.obtenerCadenaDeMontaje(v);
+        Random rnd = new Random();
+
+        // Resetear y calcular pasos por cadena
+        cadenasMontaje.forEach(CadenaMontaje::resetearEstadoSimulacion);
+
+        Map<CadenaMontaje, Integer> pasosPorCadena = new HashMap<>();
+        for (Vehiculo v : this.colaVehiculos) {
+            CadenaMontaje cadena = obtenerCadenaDeMontaje(v);
+            pasosPorCadena.merge(cadena, 3, Integer::sum);
+        }
+
+        // 2-3 errores de mecánico + al menos 1 caída de luz por cadena
+        pasosPorCadena.forEach((cadena, totalPasos) -> {
+            int numErrores = 2 + rnd.nextInt(2);
+            Set<Integer> pasosConError = new HashSet<>();
+            while (pasosConError.size() < numErrores) {
+                pasosConError.add(rnd.nextInt(totalPasos));
+            }
+
+            // La caída ocurre en un paso que no sea ya un error
+            int pasoCaida;
+            do { pasoCaida = rnd.nextInt(totalPasos); } while (pasosConError.contains(pasoCaida));
+            cadena.setPasoCaida(pasoCaida);
+
+            cadena.setErroresALanzar(numErrores);
+            cadena.setPasosConError(pasosConError);
+        });
+
+        while (!this.colaVehiculos.isEmpty()) {
+            Vehiculo v = this.colaVehiculos.poll();
+            CadenaMontaje cadenaMontaje = obtenerCadenaDeMontaje(v);
+            cadenaMontaje.setVehiculo(v);
             this.asignarOperarios(cadenaMontaje);
             simulacion.iniciar(cadenaMontaje, listener);
         }

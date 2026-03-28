@@ -22,7 +22,7 @@ public abstract class Registro {
         this.estadoVehiculo = estadoVehiculo;
     }
 
-    abstract String detalles();
+    public abstract String detalles();
 
     public Trabajador getTrabajador() {
         return trabajador;

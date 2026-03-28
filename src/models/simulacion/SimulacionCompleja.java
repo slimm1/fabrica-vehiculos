@@ -25,13 +25,14 @@ public class SimulacionCompleja extends Simulacion {
             tiempoActual += tiempoPaso;
 
             if (cadenaMontaje.hayErrorEnPasoActual()) {
+                cadenaMontaje.detener();
                 TrabajadorMecanicoCinta mecanico = mecanicos.get((int)(Math.random() * mecanicos.size()));
                 int tiempoReparacion = mecanico.getTiempoReparacion();
                 mecanico.incrementarReparaciones();
                 tiempoActual += tiempoReparacion;
                 cadenaMontaje.anadirRegistro(mecanico);
-
                 if (listener != null) {
+                    listener.onPaso(cadenaMontaje.toString(), vehiculo.getId(), vehiculo.getEstadoActual());
                     listener.onPaso("⚠ ERROR en " + cadenaMontaje.getTipo()
                                     + " — Reparando con " + mecanico.getNombre()
                                     + " (" + mecanico.getPuesto() + ") — "
@@ -41,6 +42,7 @@ public class SimulacionCompleja extends Simulacion {
 
                 try { Thread.sleep(tiempoReparacion * 1000L); }
                 catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+                cadenaMontaje.reanudar();
             }
 
             cadenaMontaje.incrementarPasoActual();

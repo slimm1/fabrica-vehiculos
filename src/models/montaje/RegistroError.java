@@ -14,7 +14,18 @@ public class RegistroError extends Registro {
     }
 
     @Override
-    String detalles() {
-        return "";
+    public String detalles() {
+        String tipoError = trabajador instanceof models.trabajador.TrabajadorAdministrador
+                ? "⚡ Apagón del sistema"
+                : "🔧 Avería en la cinta";
+
+        return "⚠ REGISTRO DE ERROR — " + tipoError + "\n"
+                + "-----------------------------------------------------------\n"
+                + "🕐 Timestamp:   " + timestamp.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")) + "\n"
+                + "🚗 Vehículo:    " + vehiculo.toString() + "\n"
+                + "🔩 Estado:      " + estadoVehiculo.getNombre() + "\n"
+                + "🔧 Componente:  " + (componente != null ? componente.getNombre() : "—") + "\n"
+                + "👷 Responsable: " + trabajador.getNombre() + " " + trabajador.getApellidos() + "\n"
+                + "📋 Puesto:      " + trabajador.getPuesto();
     }
 }
