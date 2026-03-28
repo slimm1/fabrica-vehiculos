@@ -19,7 +19,7 @@ public abstract class Simulacion {
         this.enEjecucion = false;
     }
 
-    public abstract void iniciar(CadenaMontaje cadenaMontaje);
+    public abstract void iniciar(CadenaMontaje cadenaMontaje, SimulacionListener listener);
 
     public void detener() {
         enEjecucion = false;

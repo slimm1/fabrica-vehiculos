@@ -19,7 +19,7 @@ public class SimulacionCompleja extends Simulacion {
     }
 
     @Override
-    public void iniciar(CadenaMontaje cadenaMontaje) {
+    public void iniciar(CadenaMontaje cadenaMontaje, SimulacionListener listener) {
 
     }
 

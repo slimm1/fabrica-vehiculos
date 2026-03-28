@@ -9,110 +9,99 @@ import models.vehiculo.componente.tapiceria.Tapiceria;
 import java.util.*;
 
 public class Almacen implements IAlmacen {
-    // Ahora guardamos LISTAS de objetos reales para no perder sus IDs ni datos
-    private Map<Class<? extends Motor>, List<Motor>> motores;
-    private Map<Class<? extends Tapiceria>, List<Tapiceria>> tapicerias;
-    private Map<Class<? extends Rueda>, List<Rueda>> ruedas;
-    private Map<String, Vehiculo> vehiculos;
+
+    private Map<Class<? extends Motor>,    Motor>    motores;
+    private Map<Class<? extends Tapiceria>, Tapiceria> tapicerias;
+    private Map<Class<? extends Rueda>,    Rueda>    ruedas;
+    private Map<String, Vehiculo>                    vehiculos;
 
     public Almacen() {
-        this.motores = new HashMap<>();
+        this.motores    = new HashMap<>();
         this.tapicerias = new HashMap<>();
-        this.ruedas = new HashMap<>();
-        this.vehiculos = new HashMap<>();
+        this.ruedas     = new HashMap<>();
+        this.vehiculos  = new HashMap<>();
     }
 
-    // --- MÉTODOS DE AGREGAR ---
+    // ── Agregar ───────────────────────────────────────────────────────────────
+
     @Override
     public void agregarMotor(Motor motor) {
-        motores.computeIfAbsent(motor.getClass(), k -> new ArrayList<>()).add(motor);
+        motores.merge(motor.getClass(), motor, (existing, nuevo) -> {
+            existing.setStock(existing.getStock() + nuevo.getStock());
+            return existing;
+        });
     }
 
     @Override
     public void agregarTapiceria(Tapiceria tapiceria) {
-        tapicerias.computeIfAbsent(tapiceria.getClass(), k -> new ArrayList<>()).add(tapiceria);
+        tapicerias.merge(tapiceria.getClass(), tapiceria, (existing, nuevo) -> {
+            existing.setStock(existing.getStock() + nuevo.getStock());
+            return existing;
+        });
     }
 
     @Override
     public void agregarRueda(Rueda rueda) {
-        ruedas.computeIfAbsent(rueda.getClass(), k -> new ArrayList<>()).add(rueda);
+        ruedas.merge(rueda.getClass(), rueda, (existing, nuevo) -> {
+            existing.setStock(existing.getStock() + nuevo.getStock());
+            return existing;
+        });
     }
 
     @Override
     public void agregarVehiculo(Vehiculo vehiculo) {
-        // Usamos el ID del vehículo como clave para encontrarlo rápido
         vehiculos.put(vehiculo.getId(), vehiculo);
     }
 
-    // --- MÉTODOS DE EXTRAER (Saca el objeto del almacén) ---
+    // ── Extraer ───────────────────────────────────────────────────────────────
+
     @Override
     public Motor extraerMotor(Class<? extends Motor> tipo) {
-        List<Motor> lista = motores.get(tipo);
-        if (lista != null && !lista.isEmpty()) {
-            return lista.remove(lista.size() - 1); // Extraemos el último (más eficiente)
-        }
-        return null;
+        Motor m = motores.get(tipo);
+        if (m == null || m.getStock() <= 0) return null;
+        m.setStock(m.getStock() - 1);
+        if (m.getStock() == 0) motores.remove(tipo);
+        return m;
     }
 
     @Override
     public Tapiceria extraerTapiceria(Class<? extends Tapiceria> tipo) {
-        List<Tapiceria> lista = tapicerias.get(tipo);
-        if (lista != null && !lista.isEmpty()) {
-            return lista.remove(lista.size() - 1);
-        }
-        return null;
+        Tapiceria t = tapicerias.get(tipo);
+        if (t == null || t.getStock() <= 0) return null;
+        t.setStock(t.getStock() - 1);
+        if (t.getStock() == 0) tapicerias.remove(tipo);
+        return t;
     }
 
     @Override
     public Rueda extraerRueda(Class<? extends Rueda> tipo) {
-        List<Rueda> lista = ruedas.get(tipo);
-        if (lista != null && !lista.isEmpty()) {
-            return lista.remove(lista.size() - 1);
-        }
-        return null;
+        Rueda r = ruedas.get(tipo);
+        if (r == null || r.getStock() < 4) return null;
+        r.setStock(r.getStock() - 4);
+        if (r.getStock() == 0) ruedas.remove(tipo);
+        return r;
     }
+
+    // ── Obtener ───────────────────────────────────────────────────────────────
 
     @Override
     public Vehiculo obtenerVehiculo(String id) {
         return vehiculos.get(id);
     }
 
-    // --- MÉTODOS DE STOCK ---
-    @Override
-    public boolean hayStockMotor(Class<? extends Motor> tipo, int cantidad) {
-        return motores.containsKey(tipo) && motores.get(tipo).size() >= cantidad;
-    }
-
-    @Override
-    public boolean hayStockTapiceria(Class<? extends Tapiceria> tipo, int cantidad) {
-        return tapicerias.containsKey(tipo) && tapicerias.get(tipo).size() >= cantidad;
-    }
-
-    @Override
-    public boolean hayStockRueda(Class<? extends Rueda> tipo, int cantidad) {
-        return ruedas.containsKey(tipo) && ruedas.get(tipo).size() >= cantidad;
-    }
-
-    // --- MÉTODOS DE LISTADO (Para las Tablas de la UI) ---
     @Override
     public ArrayList<Motor> obtenerMotores() {
-        ArrayList<Motor> todos = new ArrayList<>();
-        motores.values().forEach(todos::addAll);
-        return todos;
+        return new ArrayList<>(motores.values());
     }
 
     @Override
     public ArrayList<Tapiceria> obtenerTapicerias() {
-        ArrayList<Tapiceria> todas = new ArrayList<>();
-        tapicerias.values().forEach(todas::addAll);
-        return todas;
+        return new ArrayList<>(tapicerias.values());
     }
 
     @Override
     public ArrayList<Rueda> obtenerRuedas() {
-        ArrayList<Rueda> todas = new ArrayList<>();
-        ruedas.values().forEach(todas::addAll);
-        return todas;
+        return new ArrayList<>(ruedas.values());
     }
 
     @Override
@@ -123,28 +112,40 @@ public class Almacen implements IAlmacen {
     @Override
     public ArrayList<Componente> obtenerComponentes() {
         ArrayList<Componente> todos = new ArrayList<>();
-
-        todos.addAll(obtenerMotores());
-        todos.addAll(obtenerTapicerias());
-        todos.addAll(obtenerRuedas());
-
+        todos.addAll(motores.values());
+        todos.addAll(tapicerias.values());
+        todos.addAll(ruedas.values());
         return todos;
     }
+
+    // ── Stock ─────────────────────────────────────────────────────────────────
+
+    @Override
+    public boolean hayStockMotor(Class<? extends Motor> tipo, int cantidad) {
+        Motor m = motores.get(tipo);
+        return m != null && m.getStock() >= cantidad;
+    }
+
+    @Override
+    public boolean hayStockTapiceria(Class<? extends Tapiceria> tipo, int cantidad) {
+        Tapiceria t = tapicerias.get(tipo);
+        return t != null && t.getStock() >= cantidad;
+    }
+
+    @Override
+    public boolean hayStockRueda(Class<? extends Rueda> tipo, int cantidad) {
+        Rueda r = ruedas.get(tipo);
+        return r != null && r.getStock() >= cantidad * 4;
+    }
+
+    // ── Resumen ───────────────────────────────────────────────────────────────
 
     @Override
     public Map<String, Integer> obtenerResumenStockComponentes() {
         Map<String, Integer> resumen = new LinkedHashMap<>();
-
-        motores.forEach((clase, lista) -> resumen.put(
-                lista.isEmpty() ? clase.getSimpleName() : lista.get(0).getNombre(),
-                lista.stream().mapToInt(Motor::getStock).sum()));
-        ruedas.forEach((clase, lista) -> resumen.put(
-                lista.isEmpty() ? clase.getSimpleName() : lista.get(0).getNombre(),
-                lista.stream().mapToInt(Rueda::getStock).sum()));
-        tapicerias.forEach((clase, lista) -> resumen.put(
-                lista.isEmpty() ? clase.getSimpleName() : lista.get(0).getNombre(),
-                lista.stream().mapToInt(Tapiceria::getStock).sum()));
-
+        motores.values().forEach(m    -> resumen.put(m.getNombre(), m.getStock()));
+        ruedas.values().forEach(r     -> resumen.put(r.getNombre(), r.getStock()));
+        tapicerias.values().forEach(t -> resumen.put(t.getNombre(), t.getStock()));
         return resumen;
     }
 }

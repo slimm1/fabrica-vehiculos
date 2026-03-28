@@ -4,6 +4,7 @@ import data.almacen.IAlmacen;
 import data.gestion.IGestorCadenasMontaje;
 import exception.ColaVehiculosVacia;
 import models.vehiculo.*;
+import models.vehiculo.componente.Componente;
 import models.vehiculo.componente.motor.Motor;
 import models.vehiculo.componente.rueda.Rueda;
 import models.vehiculo.componente.tapiceria.Tapiceria;
@@ -12,17 +13,21 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PlanificadorUI extends JDialog implements IPlanificadorUI {
 
     private final IGestorCadenasMontaje gestorCadenasMontaje;
     private final IAlmacen almacen;
+    private final Map<String, Integer> filasPorId = new HashMap<>();
 
     private DefaultTableModel modeloCola;
     private JTextArea areaLogs;
     private JButton btnSimple;
     private JButton btnCompleja;
     private JButton btnMuyCompleja;
+    private JButton btnNuevaSimulacion;
 
     public PlanificadorUI(Frame padre, IGestorCadenasMontaje gestorCadenasMontaje, IAlmacen almacen) {
         super(padre, "Planificador", true);
@@ -78,6 +83,10 @@ public class PlanificadorUI extends JDialog implements IPlanificadorUI {
         btnCompleja    = new JButton("Simulación Compleja");
         btnMuyCompleja = new JButton("Simulación Muy Compleja");
 
+        btnNuevaSimulacion = new JButton("Nueva simulación");
+        btnNuevaSimulacion.setEnabled(false);
+        btnNuevaSimulacion.addActionListener(e -> limpiarSimulacion());
+
         btnCompleja.setEnabled(false);
         btnMuyCompleja.setEnabled(false);
 
@@ -86,9 +95,11 @@ public class PlanificadorUI extends JDialog implements IPlanificadorUI {
         panelBotones.add(btnSimple);
         panelBotones.add(btnCompleja);
         panelBotones.add(btnMuyCompleja);
+        panelBotones.add(Box.createHorizontalStrut(30));
+        panelBotones.add(btnNuevaSimulacion);
 
         // Logs
-        areaLogs = new JTextArea(8, 0);
+        areaLogs = new JTextArea(16, 0);
         areaLogs.setEditable(false);
         areaLogs.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
 
@@ -144,16 +155,29 @@ public class PlanificadorUI extends JDialog implements IPlanificadorUI {
             }
 
             int cantidad    = (int) spnCantidad.getValue();
-            Motor motor     = (Motor)    cmbMotor.getSelectedItem();
-            Rueda rueda     = (Rueda)    cmbRueda.getSelectedItem();
+            Motor motor     = (Motor)     cmbMotor.getSelectedItem();
+            Rueda rueda     = (Rueda)     cmbRueda.getSelectedItem();
             Tapiceria tap   = (Tapiceria) cmbTapiceria.getSelectedItem();
+
+            if (motor.getStock() < cantidad) {
+                JOptionPane.showMessageDialog(dialog, "Stock insuficiente de motor: hay " + motor.getStock() + " unidades.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (tap.getStock() < cantidad) {
+                JOptionPane.showMessageDialog(dialog, "Stock insuficiente de tapicería: hay " + tap.getStock() + " unidades.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (rueda.getStock() < cantidad * 4) {
+                JOptionPane.showMessageDialog(dialog, "Stock insuficiente de ruedas: se necesitan " + (cantidad * 4) + " y hay " + rueda.getStock() + ".", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             int tipoIdx     = cmbTipo.getSelectedIndex();
 
             for (int i = 0; i < cantidad; i++) {
-                ArrayList<models.vehiculo.componente.Componente> comps = new ArrayList<>();
-                comps.add(motor);
-                comps.add(tap);
-                comps.add(rueda);
+                ArrayList<Componente> comps = new ArrayList<>();
+                comps.add(almacen.extraerMotor(motor.getClass()));
+                comps.add(almacen.extraerTapiceria(tap.getClass()));
+                comps.add(almacen.extraerRueda(rueda.getClass()));
 
                 Vehiculo v = switch (tipoIdx) {
                     case 1  -> new Furgoneta(color, 3, 2100, 3500, comps);
@@ -162,6 +186,7 @@ public class PlanificadorUI extends JDialog implements IPlanificadorUI {
                 };
 
                 gestorCadenasMontaje.encolarVehiculo(v);
+                filasPorId.put(v.getId(), modeloCola.getRowCount());
                 modeloCola.addRow(new Object[]{
                         v.getId().substring(0, 8),
                         v.getTipo(),
@@ -185,20 +210,23 @@ public class PlanificadorUI extends JDialog implements IPlanificadorUI {
     // ── Simulación simple ─────────────────────────────────────────────────────
 
     private void ejecutarSimulacionSimple() {
-        setBotonesSimulacion(false);
+        setBotonesSimulacion(false, false);
         log("--- Iniciando Simulación Simple ---");
 
         new Thread(() -> {
             try {
-                gestorCadenasMontaje.iniciarSimulacionSimple();
-                actualizarEstadosCola();
+                gestorCadenasMontaje.iniciarSimulacionSimple((logTexto, idVehiculo, estado) -> {
+                    SwingUtilities.invokeLater(() -> {
+                        log(logTexto);
+                        Integer fila = filasPorId.get(idVehiculo);
+                        if (fila != null) modeloCola.setValueAt(estado, fila, 6);
+                    });
+                });
                 log("--- Simulación Simple completada ---");
             } catch (ColaVehiculosVacia ex) {
-                log("ERROR: La cola de vehículos está vacía.");
-            } catch (Exception ex) {
                 log("ERROR: " + ex.getMessage());
             } finally {
-                SwingUtilities.invokeLater(() -> setBotonesSimulacion(true));
+                SwingUtilities.invokeLater(() -> setBotonesSimulacion(false, true));
             }
         }).start();
     }
@@ -217,10 +245,11 @@ public class PlanificadorUI extends JDialog implements IPlanificadorUI {
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    private void setBotonesSimulacion(boolean enabled) {
+    private void setBotonesSimulacion(boolean enabled, boolean enableNewSimulation) {
         btnSimple.setEnabled(enabled);
-        btnCompleja.setEnabled(false);      // aún no implementada
-        btnMuyCompleja.setEnabled(false);   // aún no implementada
+        btnCompleja.setEnabled(false);
+        btnMuyCompleja.setEnabled(false);
+        btnNuevaSimulacion.setEnabled(enableNewSimulation);
     }
 
     private void log(String mensaje) {
@@ -241,6 +270,14 @@ public class PlanificadorUI extends JDialog implements IPlanificadorUI {
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.WEST;
         dialog.add(campo, gbc);
+    }
+
+    private void limpiarSimulacion() {
+        modeloCola.setRowCount(0);
+        filasPorId.clear();
+        areaLogs.setText("");
+        btnNuevaSimulacion.setEnabled(false);
+        setBotonesSimulacion(true, false);
     }
 
     public void mostrarVentana() {

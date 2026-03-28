@@ -6,10 +6,7 @@ import models.montaje.CadenaMontaje;
 import models.montaje.CadenaMontajeBiplazaDeportivo;
 import models.montaje.CadenaMontajeFurgoneta;
 import models.montaje.CadenaMontajeTurismo;
-import models.simulacion.Simulacion;
-import models.simulacion.SimulacionCompleja;
-import models.simulacion.SimulacionMuyCompleja;
-import models.simulacion.SimulacionSimple;
+import models.simulacion.*;
 import models.trabajador.TrabajadorAdministrador;
 import models.trabajador.operario.Robot;
 import models.trabajador.operario.TrabajadorOperario;
@@ -70,21 +67,20 @@ public class GestorCadenasMontaje implements IGestorCadenasMontaje {
     }
 
     @Override
-    public void iniciarSimulacionSimple() throws ColaVehiculosVacia {
-        if (this.colaVehiculos.isEmpty()) {
-            throw new ColaVehiculosVacia();
-        }
+    public void iniciarSimulacionSimple(SimulacionListener listener) throws ColaVehiculosVacia {
+        if (this.colaVehiculos.isEmpty()) throw new ColaVehiculosVacia();
         SimulacionSimple simulacion = new SimulacionSimple(this);
-        for(Vehiculo v : this.colaVehiculos) {
+        while (!this.colaVehiculos.isEmpty()) {
+            Vehiculo v = this.colaVehiculos.poll();
             CadenaMontaje cadenaMontaje = this.obtenerCadenaDeMontaje(v);
             cadenaMontaje.setVehiculo(v);
             this.asignarOperarios(cadenaMontaje);
-            simulacion.iniciar(cadenaMontaje);
+            simulacion.iniciar(cadenaMontaje, listener);
         }
     }
 
     @Override
-    public void iniciarSimulacionCompleja() throws ColaVehiculosVacia {
+    public void iniciarSimulacionCompleja(SimulacionListener listener) throws ColaVehiculosVacia {
         if (this.colaVehiculos.isEmpty()) {
             throw new ColaVehiculosVacia();
         }
@@ -92,12 +88,12 @@ public class GestorCadenasMontaje implements IGestorCadenasMontaje {
         for(Vehiculo v : this.colaVehiculos) {
             CadenaMontaje cadenaMontaje = this.obtenerCadenaDeMontaje(v);
             this.asignarOperarios(cadenaMontaje);
-            simulacion.iniciar(cadenaMontaje);
+            simulacion.iniciar(cadenaMontaje, listener);
         }
     }
 
     @Override
-    public void iniciarSimulacionMuyCompleja() throws ColaVehiculosVacia {
+    public void iniciarSimulacionMuyCompleja(SimulacionListener listener) throws ColaVehiculosVacia {
         if (this.colaVehiculos.isEmpty()) {
             throw new ColaVehiculosVacia();
         }
@@ -105,7 +101,7 @@ public class GestorCadenasMontaje implements IGestorCadenasMontaje {
         for(Vehiculo v : this.colaVehiculos) {
             CadenaMontaje cadenaMontaje = this.obtenerCadenaDeMontaje(v);
             this.asignarOperarios(cadenaMontaje);
-            simulacion.iniciar(cadenaMontaje);
+            simulacion.iniciar(cadenaMontaje, listener);
         }
     }
 

@@ -87,10 +87,11 @@ public abstract class CadenaMontaje {
 
     @Override
     public String toString() {
-        return this.getTipo() + "\n" +
-            "Estado: " + (this.funcionando ? "Funcionando.\n" : "Detenida.\n") +
-            "Vehiculo: " + this.vehiculo.toString() + "\n" +
-            this.getRobotPorEstado(this.vehiculo.getEstadoActual()).toString();
-
+        Robot robot = this.getRobotPorEstado(this.vehiculo.getEstadoActual());
+        return "-----------------------------------------------------------\n"
+                + this.getTipo() + "\n"
+                + "Estado: " + (this.funcionando ? "Funcionando.\n" : "Detenida.\n")
+                + "Vehiculo: " + this.vehiculo.toString() + "\n"
+                + (robot != null ? robot.toString() : "");
     }
 }
