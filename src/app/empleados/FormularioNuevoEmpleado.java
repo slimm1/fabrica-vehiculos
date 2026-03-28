@@ -4,8 +4,8 @@ import exception.EmptyFieldException;
 import models.trabajador.Trabajador;
 import models.trabajador.TrabajadorAdministrador;
 import models.trabajador.TrabajadorGestorPlanta;
-import models.trabajador.mecanico.TrabajadorMecanicoCintaEstandar;
-import models.trabajador.operario.TrabajadorOperarioEstandar;
+import models.trabajador.mecanico.TrabajadorMecanicoCinta;
+import models.trabajador.operario.TrabajadorOperario;
 
 import javax.swing.*;
 import java.awt.*;
@@ -78,9 +78,9 @@ public class FormularioNuevoEmpleado extends JDialog {
             LocalDateTime fechaIngreso = LocalDateTime.now();
             return switch (tipo) {
                 case "Operario" ->
-                        new TrabajadorOperarioEstandar(nombre, apellidos, dni, direccion, numSS, salarioFinal, fechaIngreso);
+                        new TrabajadorOperario(nombre, apellidos, dni, direccion, numSS, salarioFinal, fechaIngreso);
                 case "Mecánico" ->
-                        new TrabajadorMecanicoCintaEstandar(nombre, apellidos, dni, direccion, numSS, salarioFinal, fechaIngreso);
+                        new TrabajadorMecanicoCinta(nombre, apellidos, dni, direccion, numSS, salarioFinal, fechaIngreso);
                 case "Administrador" ->
                         new TrabajadorAdministrador(nombre, apellidos, dni, direccion, numSS, salarioFinal, fechaIngreso);
                 case "Gestor de Planta" ->

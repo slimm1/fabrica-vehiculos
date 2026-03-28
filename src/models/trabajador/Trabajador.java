@@ -3,7 +3,6 @@ package models.trabajador;
 
 import models.trabajador.mecanico.TrabajadorMecanicoCinta;
 import models.trabajador.operario.TrabajadorOperario;
-import models.trabajador.operario.TrabajadorOperarioEficiente;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

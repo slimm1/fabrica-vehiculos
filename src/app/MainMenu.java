@@ -7,6 +7,7 @@ import app.empleados.IListaEmpleados;
 import app.empleados.ListaEmpleados;
 import app.almacen.vehiculos.IListaVehiculos;
 import app.almacen.vehiculos.ListaVehiculos;
+import app.empleados.ListaOperarios;
 import data.App;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -73,6 +74,11 @@ public class MainMenu extends JPanel implements IMainMenu {
             listaComponentes.cargarRuedas(this.app.getAlmacen().obtenerRuedas());
             listaComponentes.cargarTapicerias(this.app.getAlmacen().obtenerTapicerias());
             listaComponentes.mostrarVentana();
+        });
+
+        btnOperarios.addActionListener(e -> {
+            IListaEmpleados operarios = new ListaOperarios(this.parentFrame, this.app.getGestorTrabajadores());
+            operarios.mostrarVentana();
         });
 
         btnSalir.addActionListener(e -> System.exit(0));

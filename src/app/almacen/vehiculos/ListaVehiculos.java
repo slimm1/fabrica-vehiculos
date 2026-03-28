@@ -26,7 +26,7 @@ public class ListaVehiculos extends JDialog implements IListaVehiculos {
     };
 
     public ListaVehiculos(Frame padre, IAlmacen almacen) {
-        super(padre, "Listado de Vehículos", true);
+        super(padre, "Listado de Vehículos Ensamblados", true);
         this.almacen = almacen;
         setLayout(new BorderLayout());
         setSize(850, 550);

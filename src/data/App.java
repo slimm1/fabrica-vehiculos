@@ -4,7 +4,6 @@ import data.dashboard.Dashboard;
 import data.dashboard.DashboardVisualizador;
 import data.dashboard.IDashboard;
 import data.dashboard.IDashboardVisualizador;
-import models.fabrica.OrdenProduccion;
 import data.almacen.Almacen;
 import data.almacen.IAlmacen;
 import data.gestion.GestorTrabajadores;
@@ -17,9 +16,9 @@ import models.planificador.Planificador;
 import models.planificador.simulacion.SimulacionSimple;
 import models.trabajador.TrabajadorAdministrador;
 import models.trabajador.TrabajadorGestorPlanta;
-import models.trabajador.mecanico.TrabajadorMecanicoCintaEficiente;
+import models.trabajador.mecanico.TrabajadorMecanicoCinta;
 import models.trabajador.operario.Robot;
-import models.trabajador.operario.TrabajadorOperarioEficiente;
+import models.trabajador.operario.TrabajadorOperario;
 import models.vehiculo.*;
 import models.vehiculo.componente.Componente;
 import models.vehiculo.componente.motor.MotorElectrico;
@@ -51,14 +50,11 @@ public class App {
         IDashboardVisualizador visualizador = new DashboardVisualizador();
         this.dashboard = new Dashboard(visualizador, this.almacen);
 
-        // 3. Crear gestor de trabajadores
         this.gestorTrabajadores = new GestorTrabajadores();
 
-        // 4. Crear sistema de gestión
         SistemaGestionFabrica sistema = new SistemaGestionFabrica(this.almacen, dashboard, this.gestorTrabajadores);
 
-        // 5. Crear trabajadores
-        crearTrabajadores(this.gestorTrabajadores, this.almacen, this.dashboard);
+        crearTrabajadores(this.gestorTrabajadores);
 
         // 6. Llenar almacén
         llenarAlmacen(this.almacen);
@@ -73,29 +69,55 @@ public class App {
 //        crearOrdenes(planificador);
     }
 
-    private static void crearTrabajadores(IGestorTrabajadores gestor, IAlmacen almacen, IDashboard dashboard) {
-        // Operarios
+    private static void crearTrabajadores(IGestorTrabajadores gestor) {
         gestor.agregarTrabajador(
-                new TrabajadorOperarioEficiente("Juan", "García", "12345678A", "Calle 1",
+                new TrabajadorOperario("Juan", "García", "12345678A", "Calle 1",
                         "SS123456", 1500, LocalDateTime.now())
         );
+        gestor.agregarTrabajador(
+                new TrabajadorOperario("Ana", "Pérez", "33333333E", "Calle 5",
+                        "SS333333", 1500, LocalDateTime.now().minusMonths(6))
+        );
+        gestor.agregarTrabajador(
+                new TrabajadorOperario("Luis", "Sánchez", "44444444F", "Calle 6",
+                        "SS444444", 1500, LocalDateTime.now().minusYears(1))
+        );
 
-        // Gestor de planta
+        gestor.agregarTrabajador(
+                new TrabajadorOperario("Elena", "Ruiz", "55555555G", "Calle 7",
+                        "SS555555", 1700, LocalDateTime.now().minusYears(2))
+        );
+        gestor.agregarTrabajador(
+                new TrabajadorOperario("Miguel", "Torres", "66666666H", "Calle 8",
+                        "SS666666", 1700, LocalDateTime.now().minusYears(3))
+        );
+
         gestor.agregarTrabajador(
                 new TrabajadorGestorPlanta("María", "López", "87654321B", "Calle 2",
                         "SS654321", 2000, LocalDateTime.now())
         );
 
-        // Administrador
         gestor.agregarTrabajador(
                 new TrabajadorAdministrador("Carlos", "Martínez", "11111111C", "Calle 3",
                         "SS111111", 2200, LocalDateTime.now())
         );
 
-        // Mecánicos
         gestor.agregarTrabajador(
-                new TrabajadorMecanicoCintaEficiente("Pedro", "Fernández", "22222222D", "Calle 4",
+                new TrabajadorMecanicoCinta("Pedro", "Fernández", "22222222D", "Calle 4",
                         "SS222222", 1800, LocalDateTime.now())
+        );
+        gestor.agregarTrabajador(
+                new TrabajadorMecanicoCinta("Rosa", "Jiménez", "77777777I", "Calle 9",
+                        "SS777777", 1800, LocalDateTime.now().minusMonths(3))
+        );
+
+        gestor.agregarTrabajador(
+                new TrabajadorMecanicoCinta("Jorge", "Moreno", "88888888J", "Calle 10",
+                        "SS888888", 1950, LocalDateTime.now().minusYears(4))
+        );
+        gestor.agregarTrabajador(
+                new TrabajadorMecanicoCinta("Laura", "Navarro", "99999999K", "Calle 11",
+                        "SS999999", 1950, LocalDateTime.now().minusYears(5))
         );
     }
 

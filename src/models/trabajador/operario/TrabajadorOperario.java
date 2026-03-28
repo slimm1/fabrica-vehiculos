@@ -4,13 +4,13 @@ import models.trabajador.Trabajador;
 
 import java.time.LocalDateTime;
 
-public abstract class TrabajadorOperario extends Trabajador {
+public class TrabajadorOperario extends Trabajador {
     protected int montajesRealizados;
 
     public TrabajadorOperario(String nombre, String apellidos, String dni, String direccion,
                               String numSeguridadSocial, double salario, LocalDateTime fechaIngreso) {
         super(nombre, apellidos, dni, direccion, numSeguridadSocial, salario, fechaIngreso);
-        this.montajesRealizados = 0;
+        this.montajesRealizados = (int)(Math.random() * 20) + 1;
     }
 
     public boolean esEficiente() {
@@ -23,5 +23,21 @@ public abstract class TrabajadorOperario extends Trabajador {
 
     public void incrementarMontajes() {
         montajesRealizados++;
+    }
+
+    public String getPuesto() {
+        if(this.esEficiente()) {
+            return "Operario Eficiente";
+        }
+        return "Operario Estándar";
+    }
+
+    public int getMontajesRealizados() {
+        return montajesRealizados;
+    }
+
+    @Override
+    public void trabajar() {
+        incrementarMontajes();
     }
 }

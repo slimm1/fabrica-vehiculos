@@ -88,10 +88,11 @@ public class ListaEmpleados extends JDialog implements IListaEmpleados {
                 t.getNumSeguridadSocial(), t.getSalario(), t.getPrintableFechaIngreso()
             });
         }
+        ordenar();
     }
 
     @Override
-    public void ordenarPorNombre() {
+    public void ordenar() {
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
         sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
         sorter.setSortKeys(sortKeys);
