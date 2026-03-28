@@ -1,17 +1,11 @@
 package data;
 
-import data.dashboard.Dashboard;
-import data.dashboard.DashboardVisualizador;
-import data.dashboard.IDashboard;
-import data.dashboard.IDashboardVisualizador;
 import data.almacen.Almacen;
 import data.almacen.IAlmacen;
 import data.gestion.GestorTrabajadores;
 import data.gestion.IGestorCadenasMontaje;
 import data.gestion.IGestorTrabajadores;
 import data.gestion.GestorCadenasMontaje;
-import models.simulacion.Simulacion;
-import models.simulacion.SimulacionSimple;
 import models.trabajador.TrabajadorAdministrador;
 import models.trabajador.TrabajadorGestorPlanta;
 import models.trabajador.mecanico.TrabajadorMecanicoCinta;
@@ -37,16 +31,11 @@ public class App {
     IGestorTrabajadores gestorTrabajadores;
     IAlmacen almacen;
     IGestorCadenasMontaje gestorCadenasMontaje;
-    IDashboard dashboard;
 
     public App() {
         // 1. Crear almacén
         this.almacen = new Almacen();
         llenarAlmacen(this.almacen);
-
-        // 2. Crear dashboard
-        IDashboardVisualizador visualizador = new DashboardVisualizador();
-        this.dashboard = new Dashboard(visualizador, this.almacen);
 
         this.gestorTrabajadores = new GestorTrabajadores();
         crearTrabajadores(this.gestorTrabajadores);

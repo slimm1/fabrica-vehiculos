@@ -1,17 +1,25 @@
 package models.montaje;
 
+import models.trabajador.Trabajador;
+import models.trabajador.TrabajadorAdministrador;
+import models.trabajador.mecanico.TrabajadorMecanicoCinta;
 import models.trabajador.operario.Robot;
 import models.vehiculo.EstadoVehiculo;
 import models.vehiculo.Vehiculo;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public abstract class CadenaMontaje {
     protected List<Robot> robots;
-    protected List<RegistroMontaje> registros;
+    protected List<Registro> registros;
     protected boolean funcionando;
     protected Vehiculo vehiculo;
+    private Set<Integer> pasosConError = new HashSet<>();
+    private int pasoActual = 0;
+    private int erroresALanzar = 0;
 
     public CadenaMontaje() {
         this.funcionando = true;
@@ -27,15 +35,11 @@ public abstract class CadenaMontaje {
         funcionando = true;
     }
 
-    public void avanzar() {
-
-    }
-
     public List<Robot> getRobots() {
         return robots;
     }
 
-    public List<RegistroMontaje> getRegistros() {
+    public List<Registro> getRegistros() {
         return registros;
     }
 
@@ -59,8 +63,12 @@ public abstract class CadenaMontaje {
         this.vehiculo = vehiculo;
     }
 
-    public void anadirRegistro() {
-        registros.add(new RegistroMontaje(this.vehiculo.getId(), this.vehiculo.getTipo(), this.vehiculo.getEstadoActual(), this.vehiculo.getComponentePorEstado()));
+    public void anadirRegistro(Trabajador trabajador) {
+        if(trabajador instanceof TrabajadorMecanicoCinta || trabajador instanceof TrabajadorAdministrador) {
+            registros.add(new RegistroError(this.vehiculo, this.vehiculo.getComponentePorEstado(), trabajador, this.vehiculo.getEstadoActual()));
+            return;
+        }
+        registros.add(new RegistroMontaje(this.vehiculo, this.vehiculo.getComponentePorEstado(), trabajador, this.vehiculo.getEstadoActual()));
     }
 
     public List<Robot> inicializarRobots() {
@@ -89,13 +97,34 @@ public abstract class CadenaMontaje {
                 .orElse(null);
     }
 
+    public Set<Integer> getPasosConError() { return pasosConError; }
+    public void setPasosConError(Set<Integer> pasos) { this.pasosConError = pasos; }
+    public int getPasoActual() { return pasoActual; }
+    public void incrementarPasoActual() { this.pasoActual++; }
+    public boolean hayErrorEnPasoActual() { return pasosConError.contains(pasoActual); }
+    public int getErroresALanzar() { return erroresALanzar; }
+    public void setErroresALanzar(int errores) { this.erroresALanzar = errores; }
+
+    public void resetearEstadoSimulacion() {
+        this.pasoActual = 0;
+        this.pasosConError = new HashSet<>();
+        this.erroresALanzar = 0;
+    }
+
     @Override
     public String toString() {
         Robot robot = this.getRobotPorEstado(this.vehiculo.getEstadoActual());
+        String robotInfo = robot != null
+                ? "🔧 Robot: " + robot.getEstadoVehiculo().getNombre()
+                + " — Operario: " + robot.getOperario().getNombre()
+                + " " + robot.getOperario().getApellidos()
+                + " (" + robot.getOperario().getPuesto() + ")"
+                + " — " + robot.getOperario().getTiempoTarea() + "s"
+                : "";
+
         return "-----------------------------------------------------------\n"
-                + this.getTipo() + "\n"
-                + "Estado: " + (this.funcionando ? "Funcionando.\n" : "Detenida.\n")
-                + "Vehiculo: " + this.vehiculo.toString() + "\n"
-                + (robot != null ? robot.toString() : "");
+                + "🏭 " + this.getTipo() + " — " + (this.funcionando ? "✅ Funcionando" : "🛑 Detenida") + "\n"
+                + "🚗 " + this.vehiculo.toString() + "\n"
+                + robotInfo;
     }
 }

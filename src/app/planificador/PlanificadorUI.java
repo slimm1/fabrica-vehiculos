@@ -3,6 +3,7 @@ package app.planificador;
 import data.almacen.IAlmacen;
 import data.gestion.IGestorCadenasMontaje;
 import exception.ColaVehiculosVacia;
+import models.simulacion.SimulacionListener;
 import models.vehiculo.*;
 import models.vehiculo.componente.Componente;
 import models.vehiculo.componente.motor.Motor;
@@ -87,10 +88,10 @@ public class PlanificadorUI extends JDialog implements IPlanificadorUI {
         btnNuevaSimulacion.setEnabled(false);
         btnNuevaSimulacion.addActionListener(e -> limpiarSimulacion());
 
-        btnCompleja.setEnabled(false);
         btnMuyCompleja.setEnabled(false);
 
-        btnSimple.addActionListener(e -> ejecutarSimulacionSimple());
+        btnSimple.addActionListener(e -> ejecutarSimulacion("Simple"));
+        btnCompleja.addActionListener(e -> ejecutarSimulacion("Compleja"));
 
         panelBotones.add(btnSimple);
         panelBotones.add(btnCompleja);
@@ -207,22 +208,26 @@ public class PlanificadorUI extends JDialog implements IPlanificadorUI {
         dialog.setVisible(true);
     }
 
-    // ── Simulación simple ─────────────────────────────────────────────────────
-
-    private void ejecutarSimulacionSimple() {
+    private void ejecutarSimulacion(String tipo) {
         setBotonesSimulacion(false, false);
-        log("--- Iniciando Simulación Simple ---");
+        log("--- Iniciando Simulación " + tipo + " ---");
 
         new Thread(() -> {
             try {
-                gestorCadenasMontaje.iniciarSimulacionSimple((logTexto, idVehiculo, estado) -> {
-                    SwingUtilities.invokeLater(() -> {
-                        log(logTexto);
-                        Integer fila = filasPorId.get(idVehiculo);
-                        if (fila != null) modeloCola.setValueAt(estado, fila, 6);
-                    });
-                });
-                log("--- Simulación Simple completada ---");
+                SimulacionListener listener = (logTexto, idVehiculo, estado) ->
+                        SwingUtilities.invokeLater(() -> {
+                            log(logTexto);
+                            Integer fila = filasPorId.get(idVehiculo);
+                            if (fila != null) modeloCola.setValueAt(estado, fila, 6);
+                        });
+
+                switch (tipo) {
+                    case "Simple"       -> gestorCadenasMontaje.iniciarSimulacionSimple(listener);
+                    case "Compleja"     -> gestorCadenasMontaje.iniciarSimulacionCompleja(listener);
+                    case "Muy Compleja" -> gestorCadenasMontaje.iniciarSimulacionMuyCompleja(listener);
+                }
+
+                log("--- Simulación " + tipo + " completada ---");
             } catch (ColaVehiculosVacia ex) {
                 log("ERROR: " + ex.getMessage());
             } finally {
@@ -231,23 +236,11 @@ public class PlanificadorUI extends JDialog implements IPlanificadorUI {
         }).start();
     }
 
-    private void actualizarEstadosCola() {
-        // Refresca la columna Estado de todas las filas (índice 6)
-        // La simulación ya habrá avanzado los estados de los vehículos
-        SwingUtilities.invokeLater(() -> {
-            // No tenemos referencia directa a los vehículos desde el modelo,
-            // así que marcamos todos como FINALIZADO al terminar la simulación simple
-            for (int i = 0; i < modeloCola.getRowCount(); i++) {
-                modeloCola.setValueAt(EstadoVehiculo.FINALIZADO, i, 6);
-            }
-        });
-    }
-
     // ── Helpers ───────────────────────────────────────────────────────────────
 
     private void setBotonesSimulacion(boolean enabled, boolean enableNewSimulation) {
         btnSimple.setEnabled(enabled);
-        btnCompleja.setEnabled(false);
+        btnCompleja.setEnabled(enabled);
         btnMuyCompleja.setEnabled(false);
         btnNuevaSimulacion.setEnabled(enableNewSimulation);
     }

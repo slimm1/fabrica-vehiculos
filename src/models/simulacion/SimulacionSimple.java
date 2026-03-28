@@ -16,7 +16,7 @@ public class SimulacionSimple extends Simulacion {
         while (!vehiculo.estaCompleto()) {
             Robot robot = cadenaMontaje.getRobotPorEstado(vehiculo.getEstadoActual());
             int tiempoPaso = robot.montarComponente(vehiculo);
-            cadenaMontaje.anadirRegistro();
+            cadenaMontaje.anadirRegistro(robot.getOperario());
             tiempoActual += tiempoPaso;
 
             if (listener != null) {
@@ -30,7 +30,6 @@ public class SimulacionSimple extends Simulacion {
             }
         }
         gestorCadenasMontaje.getAlmacen().agregarVehiculo(vehiculo);
-
     }
 
     @Override

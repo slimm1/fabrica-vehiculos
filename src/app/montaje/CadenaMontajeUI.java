@@ -1,11 +1,13 @@
 package app.montaje;
 
 import models.montaje.CadenaMontaje;
-import models.montaje.RegistroMontaje;
+import models.montaje.Registro;
+import models.montaje.RegistroError;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -13,10 +15,9 @@ import java.util.List;
 public class CadenaMontajeUI extends JDialog {
 
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("HH:mm:ss");
-
     private final List<CadenaMontaje> cadenas;
-
     private final DefaultTableModel[] modelos = new DefaultTableModel[3];
+    private final JTable[] tablas = new JTable[3];
 
     public CadenaMontajeUI(Frame padre, List<CadenaMontaje> cadenas) {
         super(padre, "Cadenas de Montaje", true);
@@ -35,13 +36,22 @@ public class CadenaMontajeUI extends JDialog {
         for (int i = 0; i < cadenas.size(); i++) {
             CadenaMontaje cadena = cadenas.get(i);
             DefaultTableModel modelo = new DefaultTableModel(
-                    new String[]{"Hora", "Vehículo", "Estado", "Componente"}, 0) {
+                    new String[]{"Tipo Registro", "Hora", "Estado", "Trabajador"}, 0) {
                 @Override public boolean isCellEditable(int r, int c) { return false; }
             };
             modelos[i] = modelo;
 
-            JTable tabla = new JTable(modelo);
-            tabla.getColumnModel().getColumn(1).setPreferredWidth(160);
+            JTable tabla = new JTable(modelo) {
+                @Override
+                public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                    Component c = super.prepareRenderer(renderer, row, column);
+                    String tipo = (String) getValueAt(row, 0);
+                    c.setBackground("ERROR".equals(tipo) ? new Color(255, 180, 180) : getBackground());
+                    return c;
+                }
+            };
+
+            tablas[i] = tabla;            tabla.getColumnModel().getColumn(1).setPreferredWidth(160);
             tabla.getColumnModel().getColumn(3).setPreferredWidth(160);
             tabla.setAutoCreateRowSorter(true);
 
@@ -70,13 +80,14 @@ public class CadenaMontajeUI extends JDialog {
         for (int i = 0; i < cadenas.size(); i++) {
             DefaultTableModel modelo = modelos[i];
             modelo.setRowCount(0);
-            List<RegistroMontaje> registros = cadenas.get(i).getRegistros();
-            for (RegistroMontaje r : registros) {
+            List<Registro> registros = cadenas.get(i).getRegistros();
+            for (Registro r : registros) {
+                String tipoRegistro = r instanceof RegistroError ? "ERROR" : "Montaje";
                 modelo.addRow(new Object[]{
+                        tipoRegistro,
                         r.getTimestamp().format(FMT),
-                        r.getTipoVehiculo() + " [" + r.getIdVehiculo().substring(0, 8) + "]",
-                        r.getEstado(),
-                        r.getComponente() != null ? r.getComponente().getNombre() : "—"
+                        r.getEstadoVehiculo().getNombre(),
+                        r.getTrabajador().getNombre() + " " + r.getTrabajador().getApellidos()
                 });
             }
         }

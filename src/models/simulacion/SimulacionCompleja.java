@@ -3,54 +3,61 @@ package models.simulacion;
 import data.gestion.GestorCadenasMontaje;
 import models.montaje.CadenaMontaje;
 import models.trabajador.mecanico.TrabajadorMecanicoCinta;
+import models.trabajador.operario.Robot;
 import models.vehiculo.Vehiculo;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
 public class SimulacionCompleja extends Simulacion {
-    private Map<CadenaMontaje, Integer> problemasReparados;
 
     public SimulacionCompleja(GestorCadenasMontaje sistema) {
         super(sistema);
-        this.problemasReparados = new HashMap<>();
     }
 
-    @Override
     public void iniciar(CadenaMontaje cadenaMontaje, SimulacionListener listener) {
+        Vehiculo vehiculo = cadenaMontaje.getVehiculo();
+        List<TrabajadorMecanicoCinta> mecanicos = gestorCadenasMontaje.getGestorTrabajadores().obtenerMecanicos();
 
+        while (!vehiculo.estaCompleto()) {
+            Robot robot = cadenaMontaje.getRobotPorEstado(vehiculo.getEstadoActual());
+            int tiempoPaso = robot.montarComponente(vehiculo);
+            cadenaMontaje.anadirRegistro(robot.getOperario());
+            tiempoActual += tiempoPaso;
+
+            if (cadenaMontaje.hayErrorEnPasoActual()) {
+                TrabajadorMecanicoCinta mecanico = mecanicos.get((int)(Math.random() * mecanicos.size()));
+                int tiempoReparacion = mecanico.getTiempoReparacion();
+                mecanico.incrementarReparaciones();
+                tiempoActual += tiempoReparacion;
+                cadenaMontaje.anadirRegistro(mecanico);
+
+                if (listener != null) {
+                    listener.onPaso("⚠ ERROR en " + cadenaMontaje.getTipo()
+                                    + " — Reparando con " + mecanico.getNombre()
+                                    + " (" + mecanico.getPuesto() + ") — "
+                                    + tiempoReparacion + "s",
+                            vehiculo.getId(), vehiculo.getEstadoActual());
+                }
+
+                try { Thread.sleep(tiempoReparacion * 1000L); }
+                catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+            }
+
+            cadenaMontaje.incrementarPasoActual();
+
+            if (listener != null) {
+                listener.onPaso(cadenaMontaje.toString(), vehiculo.getId(), vehiculo.getEstadoActual());
+            }
+
+            try { Thread.sleep(tiempoPaso * 1000L); }
+            catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+        }
+
+        gestorCadenasMontaje.getAlmacen().agregarVehiculo(vehiculo);
     }
 
     @Override
     protected void manejarProblemas() {
-        List<CadenaMontaje> cadenas = gestorCadenasMontaje.getCadenasMontaje();
-
-        for (CadenaMontaje cadena : cadenas) {
-            if (Math.random() < 0.2) {
-                generarProblema(cadena);
-            }
-        }
-    }
-
-    private void generarProblema(CadenaMontaje cadena) {
-        cadena.detener();
-        List<TrabajadorMecanicoCinta> mecanicos = gestorCadenasMontaje.getGestorTrabajadores().obtenerMecanicos();
-
-        if (!mecanicos.isEmpty()) {
-            TrabajadorMecanicoCinta mecanico = mecanicos.get(new Random().nextInt(mecanicos.size()));
-            mecanico.trabajar();
-            int reparaciones = problemasReparados.getOrDefault(cadena, 0);
-            problemasReparados.put(cadena, reparaciones + 1);
-
-            try {
-                Thread.sleep(mecanico.getTiempoReparacion() * 1000L);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-
-            cadena.reanudar();
-        }
+        // Gestionado inline en iniciar()
     }
 }

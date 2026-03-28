@@ -81,12 +81,32 @@ public class GestorCadenasMontaje implements IGestorCadenasMontaje {
 
     @Override
     public void iniciarSimulacionCompleja(SimulacionListener listener) throws ColaVehiculosVacia {
-        if (this.colaVehiculos.isEmpty()) {
-            throw new ColaVehiculosVacia();
-        }
+        if (this.colaVehiculos.isEmpty()) throw new ColaVehiculosVacia();
+
         SimulacionCompleja simulacion = new SimulacionCompleja(this);
-        for(Vehiculo v : this.colaVehiculos) {
-            CadenaMontaje cadenaMontaje = this.obtenerCadenaDeMontaje(v);
+        Random rnd = new Random();
+        cadenasMontaje.forEach(CadenaMontaje::resetearEstadoSimulacion);
+
+        Map<CadenaMontaje, Integer> pasosPorCadena = new HashMap<>();
+        for (Vehiculo v : this.colaVehiculos) {
+            CadenaMontaje cadena = obtenerCadenaDeMontaje(v);
+            pasosPorCadena.merge(cadena, 4, Integer::sum);
+        }
+
+        pasosPorCadena.forEach((cadena, totalPasos) -> {
+            int numErrores = 2 + rnd.nextInt(2);
+            Set<Integer> pasosConError = new HashSet<>();
+            while (pasosConError.size() < numErrores) {
+                pasosConError.add(rnd.nextInt(totalPasos));
+            }
+            cadena.setErroresALanzar(numErrores);
+            cadena.setPasosConError(pasosConError);
+        });
+
+        while (!this.colaVehiculos.isEmpty()) {
+            Vehiculo v = this.colaVehiculos.poll();
+            CadenaMontaje cadenaMontaje = obtenerCadenaDeMontaje(v);
+            cadenaMontaje.setVehiculo(v);
             this.asignarOperarios(cadenaMontaje);
             simulacion.iniciar(cadenaMontaje, listener);
         }
