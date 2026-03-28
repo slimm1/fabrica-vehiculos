@@ -57,24 +57,24 @@ public class App {
     private static void crearTrabajadores(IGestorTrabajadores gestor) {
         gestor.agregarTrabajador(
                 new TrabajadorOperario("Juan", "García", "12345678A", "Calle 1",
-                        "SS123456", 1500, LocalDateTime.now())
+                        "SS123456", 1500, LocalDateTime.now(), (int)(Math.random() * 20) + 1)
         );
         gestor.agregarTrabajador(
                 new TrabajadorOperario("Ana", "Pérez", "33333333E", "Calle 5",
-                        "SS333333", 1500, LocalDateTime.now().minusMonths(6))
+                        "SS333333", 1500, LocalDateTime.now().minusMonths(6), (int)(Math.random() * 20) + 1)
         );
         gestor.agregarTrabajador(
                 new TrabajadorOperario("Luis", "Sánchez", "44444444F", "Calle 6",
-                        "SS444444", 1500, LocalDateTime.now().minusYears(1))
+                        "SS444444", 1500, LocalDateTime.now().minusYears(1), (int)(Math.random() * 20) + 1)
         );
 
         gestor.agregarTrabajador(
                 new TrabajadorOperario("Elena", "Ruiz", "55555555G", "Calle 7",
-                        "SS555555", 1700, LocalDateTime.now().minusYears(2))
+                        "SS555555", 1700, LocalDateTime.now().minusYears(2), (int)(Math.random() * 20) + 1)
         );
         gestor.agregarTrabajador(
                 new TrabajadorOperario("Miguel", "Torres", "66666666H", "Calle 8",
-                        "SS666666", 1700, LocalDateTime.now().minusYears(3))
+                        "SS666666", 1700, LocalDateTime.now().minusYears(3), (int)(Math.random() * 20) + 1)
         );
 
         gestor.agregarTrabajador(

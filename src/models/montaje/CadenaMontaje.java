@@ -35,6 +35,10 @@ public abstract class CadenaMontaje {
         return robots;
     }
 
+    public List<RegistroMontaje> getRegistros() {
+        return registros;
+    }
+
     public void setRobots(List<Robot> robots) {
         this.robots = robots;
     }

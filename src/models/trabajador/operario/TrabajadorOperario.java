@@ -8,9 +8,9 @@ public class TrabajadorOperario extends Trabajador {
     protected int montajesRealizados;
 
     public TrabajadorOperario(String nombre, String apellidos, String dni, String direccion,
-                              String numSeguridadSocial, double salario, LocalDateTime fechaIngreso) {
+                              String numSeguridadSocial, double salario, LocalDateTime fechaIngreso, int montajesRealizados) {
         super(nombre, apellidos, dni, direccion, numSeguridadSocial, salario, fechaIngreso);
-        this.montajesRealizados = (int)(Math.random() * 20) + 1;
+        this.montajesRealizados = montajesRealizados;
     }
 
     public boolean esEficiente() {

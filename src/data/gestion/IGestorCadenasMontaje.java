@@ -13,4 +13,5 @@ public interface IGestorCadenasMontaje {
     void iniciarSimulacionCompleja(SimulacionListener listener) throws ColaVehiculosVacia;
     void iniciarSimulacionMuyCompleja(SimulacionListener listener) throws ColaVehiculosVacia;
     List<CadenaMontaje> inicializarCadenasMontaje();
+    List<CadenaMontaje> getCadenasMontaje();
 }

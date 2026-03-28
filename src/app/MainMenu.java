@@ -8,6 +8,7 @@ import app.empleados.ListaEmpleados;
 import app.almacen.vehiculos.IListaVehiculos;
 import app.almacen.vehiculos.ListaVehiculos;
 import app.empleados.ListaOperarios;
+import app.montaje.CadenaMontajeUI;
 import app.planificador.IPlanificadorUI;
 import app.planificador.PlanificadorUI;
 import data.App;
@@ -86,6 +87,11 @@ public class MainMenu extends JPanel implements IMainMenu {
         btnPlanificador.addActionListener(e -> {
             IPlanificadorUI planificadorUI = new PlanificadorUI(this.parentFrame, this.app.getGestorCadenasMontaje(), this.app.getAlmacen());
             planificadorUI.mostrarVentana();
+        });
+
+        btnCadenasMontaje.addActionListener(e -> {
+            CadenaMontajeUI cadenaMontajeUI = new CadenaMontajeUI(this.parentFrame, this.app.getGestorCadenasMontaje().getCadenasMontaje());
+            cadenaMontajeUI.mostrarVentana();
         });
 
         btnSalir.addActionListener(e -> System.exit(0));

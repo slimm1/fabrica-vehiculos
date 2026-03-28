@@ -78,7 +78,7 @@ public class FormularioNuevoEmpleado extends JDialog {
             LocalDateTime fechaIngreso = LocalDateTime.now();
             return switch (tipo) {
                 case "Operario" ->
-                        new TrabajadorOperario(nombre, apellidos, dni, direccion, numSS, salarioFinal, fechaIngreso);
+                        new TrabajadorOperario(nombre, apellidos, dni, direccion, numSS, salarioFinal, fechaIngreso, 0);
                 case "Mecánico" ->
                         new TrabajadorMecanicoCinta(nombre, apellidos, dni, direccion, numSS, salarioFinal, fechaIngreso);
                 case "Administrador" ->
