@@ -1,6 +1,6 @@
 package models.trabajador;
 
-import models.fabrica.montaje.CadenaMontaje;
+import models.montaje.CadenaMontaje;
 
 import java.time.LocalDateTime;
 import java.util.List;

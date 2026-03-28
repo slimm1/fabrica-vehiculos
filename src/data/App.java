@@ -7,17 +7,14 @@ import data.dashboard.IDashboardVisualizador;
 import data.almacen.Almacen;
 import data.almacen.IAlmacen;
 import data.gestion.GestorTrabajadores;
+import data.gestion.IGestorCadenasMontaje;
 import data.gestion.IGestorTrabajadores;
-import data.gestion.SistemaGestionFabrica;
-import models.fabrica.montaje.CadenaMontaje;
-import models.fabrica.montaje.CadenaMontajeTurismo;
-import models.fabrica.montaje.ConfiguracionCadenaMontaje;
-import models.planificador.Planificador;
-import models.planificador.simulacion.SimulacionSimple;
+import data.gestion.GestorCadenasMontaje;
+import models.simulacion.Simulacion;
+import models.simulacion.SimulacionSimple;
 import models.trabajador.TrabajadorAdministrador;
 import models.trabajador.TrabajadorGestorPlanta;
 import models.trabajador.mecanico.TrabajadorMecanicoCinta;
-import models.trabajador.operario.Robot;
 import models.trabajador.operario.TrabajadorOperario;
 import models.vehiculo.*;
 import models.vehiculo.componente.Componente;
@@ -33,40 +30,28 @@ import models.vehiculo.componente.tapiceria.TapiceriaTela;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class App {
 
     IGestorTrabajadores gestorTrabajadores;
     IAlmacen almacen;
+    IGestorCadenasMontaje gestorCadenasMontaje;
     IDashboard dashboard;
 
     public App() {
         // 1. Crear almacén
         this.almacen = new Almacen();
+        llenarAlmacen(this.almacen);
 
         // 2. Crear dashboard
         IDashboardVisualizador visualizador = new DashboardVisualizador();
         this.dashboard = new Dashboard(visualizador, this.almacen);
 
         this.gestorTrabajadores = new GestorTrabajadores();
-
-        SistemaGestionFabrica sistema = new SistemaGestionFabrica(this.almacen, dashboard, this.gestorTrabajadores);
-
         crearTrabajadores(this.gestorTrabajadores);
 
-        // 6. Llenar almacén
-        llenarAlmacen(this.almacen);
-
-        // 7. Crear cadenas de montaje
-        crearCadenasMontaje(sistema, this.gestorTrabajadores);
-
-        // 8. Crear planificador
-        Planificador planificador = new SimulacionSimple(sistema);
-
-        // 9. Crear órdenes de producción
-//        crearOrdenes(planificador);
+        this.gestorCadenasMontaje = new GestorCadenasMontaje(this.almacen, this.gestorTrabajadores);
     }
 
     private static void crearTrabajadores(IGestorTrabajadores gestor) {
@@ -213,22 +198,22 @@ public class App {
         System.out.println("Almacén inicializado con stock aleatorio.");
     }
 
-    private static void crearCadenasMontaje(SistemaGestionFabrica sistema,
+    private static void crearCadenasMontaje(GestorCadenasMontaje sistema,
                                             IGestorTrabajadores gestor) {
-        List<Robot> robots = new ArrayList<>();
-        robots.add(new Robot("R1", gestor.obtenerOperarios().get(0), EstadoVehiculo.CHASIS));
-        robots.add(new Robot("R2", gestor.obtenerOperarios().get(0), EstadoVehiculo.MOTOR));
-        robots.add(new Robot("R3", gestor.obtenerOperarios().get(0), EstadoVehiculo.RUEDAS));
-        robots.add(new Robot("R4", gestor.obtenerOperarios().get(0), EstadoVehiculo.TAPICERIA));
-
-        ConfiguracionCadenaMontaje config = new ConfiguracionCadenaMontaje(
-                MotorGasolina.class,
-                TapiceriaTela.class,
-                RuedaNormal.class
-        );
-
-        CadenaMontaje cadena1 = new CadenaMontajeTurismo(robots, config);
-        sistema.agregarCadenaMontaje(cadena1);
+//        List<Robot> robots = new ArrayList<>();
+//        robots.add(new Robot("R1", gestor.obtenerOperarios().get(0), EstadoVehiculo.CHASIS));
+//        robots.add(new Robot("R2", gestor.obtenerOperarios().get(0), EstadoVehiculo.MOTOR));
+//        robots.add(new Robot("R3", gestor.obtenerOperarios().get(0), EstadoVehiculo.RUEDAS));
+//        robots.add(new Robot("R4", gestor.obtenerOperarios().get(0), EstadoVehiculo.TAPICERIA));
+//
+//        ConfiguracionCadenaMontaje config = new ConfiguracionCadenaMontaje(
+//                MotorGasolina.class,
+//                TapiceriaTela.class,
+//                RuedaNormal.class
+//        );
+//
+//        CadenaMontaje cadena1 = new CadenaMontajeTurismo(robots, config);
+//        sistema.agregarCadenaMontaje(cadena1);
     }
 
 //    private static void crearOrdenes(Planificador planificador) {
@@ -252,5 +237,9 @@ public class App {
 
     public IAlmacen getAlmacen() {
         return almacen;
+    }
+
+    public IGestorCadenasMontaje getGestorCadenasMontaje() {
+        return gestorCadenasMontaje;
     }
 }

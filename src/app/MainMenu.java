@@ -8,6 +8,8 @@ import app.empleados.ListaEmpleados;
 import app.almacen.vehiculos.IListaVehiculos;
 import app.almacen.vehiculos.ListaVehiculos;
 import app.empleados.ListaOperarios;
+import app.planificador.IPlanificadorUI;
+import app.planificador.PlanificadorUI;
 import data.App;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -79,6 +81,11 @@ public class MainMenu extends JPanel implements IMainMenu {
         btnOperarios.addActionListener(e -> {
             IListaEmpleados operarios = new ListaOperarios(this.parentFrame, this.app.getGestorTrabajadores());
             operarios.mostrarVentana();
+        });
+
+        btnPlanificador.addActionListener(e -> {
+            IPlanificadorUI planificadorUI = new PlanificadorUI(this.parentFrame, this.app.getGestorCadenasMontaje(), this.app.getAlmacen());
+            planificadorUI.mostrarVentana();
         });
 
         btnSalir.addActionListener(e -> System.exit(0));

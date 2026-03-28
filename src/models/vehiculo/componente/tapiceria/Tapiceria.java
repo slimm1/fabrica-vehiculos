@@ -13,7 +13,7 @@ public abstract class Tapiceria extends Componente {
 
     @Override
     public String toString() {
-        return "Color: " + color + ", Dimensiones: " + metrosCuadrados + ".";
+        return "Cantidad: " + this.getStock() +  ", Color: " + color + ", Dimensiones: " + metrosCuadrados + ".";
     }
 
     public String getColor() {

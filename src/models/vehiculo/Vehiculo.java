@@ -5,6 +5,9 @@ import models.trabajador.TrabajadorGestorPlanta;
 import models.trabajador.mecanico.TrabajadorMecanicoCinta;
 import models.trabajador.operario.TrabajadorOperario;
 import models.vehiculo.componente.Componente;
+import models.vehiculo.componente.motor.Motor;
+import models.vehiculo.componente.rueda.Rueda;
+import models.vehiculo.componente.tapiceria.Tapiceria;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,9 +23,10 @@ public abstract class Vehiculo {
     protected EstadoVehiculo estadoActual;
     protected int indiceEstado;
     protected ArrayList<Componente> componentes;
+
     private static final List<EstadoVehiculo> ESTADOS_ORDEN =
             Arrays.asList(EstadoVehiculo.CHASIS, EstadoVehiculo.MOTOR,
-                    EstadoVehiculo.TAPICERIA, EstadoVehiculo.RUEDAS, EstadoVehiculo.FINALIZADO);
+                EstadoVehiculo.TAPICERIA, EstadoVehiculo.RUEDAS, EstadoVehiculo.FINALIZADO);
 
     public Vehiculo(String color, int numPlazas, int tara, int pesoMaximoAutorizado, ArrayList<Componente> componentes) {
         this.id = UUID.randomUUID().toString();
@@ -83,5 +87,20 @@ public abstract class Vehiculo {
 
     public ArrayList<Componente> getComponentes() {
         return componentes;
+    }
+
+    public Componente getComponentePorEstado() {
+        return switch (this.estadoActual) {
+            case MOTOR     -> componentes.stream().filter(c -> c instanceof Motor).findFirst().orElse(null);
+            case TAPICERIA -> componentes.stream().filter(c -> c instanceof Tapiceria).findFirst().orElse(null);
+            case RUEDAS    -> componentes.stream().filter(c -> c instanceof Rueda).findFirst().orElse(null);
+            default        -> null;
+        };
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[%s] %s | Color: %s | Plazas: %d | Tara: %d kg | PMA: %d kg | Estado: %s",
+                id.substring(0, 8), getTipo(), color, numPlazas, tara, pesoMaximoAutorizado, estadoActual);
     }
 }

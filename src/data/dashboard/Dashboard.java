@@ -1,6 +1,7 @@
 package data.dashboard;
 
 import data.almacen.IAlmacen;
+import models.montaje.RegistroMontaje;
 import models.vehiculo.EstadoVehiculo;
 
 import java.time.LocalDateTime;

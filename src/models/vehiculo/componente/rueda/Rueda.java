@@ -28,7 +28,7 @@ public abstract class Rueda extends Componente {
 
     @Override
     public String toString() {
-        return anchoMm + "/" + diametroPulgadas + " [ Índice de carga (kg): " + indiceCargaKg + ", Cod. Velocidad: " + codigoVelocidadKmh +" ]";
+        return "Cantidad: " + this.getStock() +  ", " + anchoMm + "/" + diametroPulgadas + " [ Índice de carga (kg): " + indiceCargaKg + ", Cod. Velocidad: " + codigoVelocidadKmh +" ]";
     }
 
     public int getAnchoMm() {

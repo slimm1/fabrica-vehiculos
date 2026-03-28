@@ -1,6 +1,7 @@
-package data.dashboard;
+package models.montaje;
 
 import models.vehiculo.EstadoVehiculo;
+import models.vehiculo.componente.Componente;
 
 import java.time.LocalDateTime;
 
@@ -9,9 +10,9 @@ public class RegistroMontaje {
     private String tipoVehiculo;
     private EstadoVehiculo estado;
     private LocalDateTime timestamp;
-    private String componente;
+    private Componente componente;
 
-    public RegistroMontaje(String idVehiculo, String tipoVehiculo, EstadoVehiculo estado, String componente) {
+    public RegistroMontaje(String idVehiculo, String tipoVehiculo, EstadoVehiculo estado, Componente componente) {
         this.idVehiculo = idVehiculo;
         this.tipoVehiculo = tipoVehiculo;
         this.estado = estado;
@@ -35,7 +36,7 @@ public class RegistroMontaje {
         return timestamp;
     }
 
-    public String getComponente() {
+    public Componente getComponente() {
         return componente;
     }
 }

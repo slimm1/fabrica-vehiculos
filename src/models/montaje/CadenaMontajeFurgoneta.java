@@ -1,4 +1,4 @@
-package models.fabrica.montaje;
+package models.montaje;
 
 import models.trabajador.operario.Robot;
 import models.vehiculo.Furgoneta;
@@ -8,13 +8,9 @@ import java.util.List;
 
 public class CadenaMontajeFurgoneta extends CadenaMontaje {
 
-    public CadenaMontajeFurgoneta(List<Robot> robots, ConfiguracionCadenaMontaje configuracion) {
-        super(robots, configuracion);
-    }
-
     @Override
-    public void construirVehiculo(Vehiculo vehiculo) {
-        if (vehiculo instanceof Furgoneta) {
+    public void avanzar() {
+        if (this.vehiculo instanceof Furgoneta) {
             for (Robot robot : robots) {
                 robot.montarComponente(vehiculo);
             }

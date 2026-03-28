@@ -24,7 +24,7 @@ public abstract class Motor extends Componente {
 
     @Override
     public String toString() {
-        return "Cilindrada: " + cilindrada + ", Potencia: " + potencia + ", Num. cilindros: " + numeroCilindros + ".";
+        return "Cantidad: " + this.getStock() +  ", Cilindrada: " + cilindrada + ", Potencia: " + potencia + ", Num. cilindros: " + numeroCilindros + ".";
     }
 
     public int getCilindrada() {

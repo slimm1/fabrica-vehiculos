@@ -40,4 +40,9 @@ public class TrabajadorOperario extends Trabajador {
     public void trabajar() {
         incrementarMontajes();
     }
+
+    @Override
+    public String toString() {
+        return "Operario: " + nombre + ", " + apellidos;
+    }
 }

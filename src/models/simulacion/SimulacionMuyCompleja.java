@@ -1,11 +1,11 @@
-package models.planificador.simulacion;
+package models.simulacion;
 
-import data.gestion.SistemaGestionFabrica;
+import data.gestion.GestorCadenasMontaje;
 
 public class SimulacionMuyCompleja extends SimulacionCompleja {
     private int caidas;
 
-    public SimulacionMuyCompleja(SistemaGestionFabrica sistema) {
+    public SimulacionMuyCompleja(GestorCadenasMontaje sistema) {
         super(sistema);
         this.caidas = 0;
     }
@@ -22,7 +22,7 @@ public class SimulacionMuyCompleja extends SimulacionCompleja {
 
     private void generarCaidaSistema() {
         System.out.println("¡APAGÓN! Sistema en pausa...");
-        sistema.manejarError();
+        gestorCadenasMontaje.manejarError();
 
         try {
             Thread.sleep(5000);
@@ -30,7 +30,7 @@ public class SimulacionMuyCompleja extends SimulacionCompleja {
             Thread.currentThread().interrupt();
         }
 
-        sistema.restaurarSistema();
+        gestorCadenasMontaje.restaurarSistema();
         System.out.println("Sistema restaurado");
     }
 }

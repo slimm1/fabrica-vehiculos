@@ -1,5 +1,6 @@
 package data.dashboard;
 
+import models.montaje.RegistroMontaje;
 import models.vehiculo.EstadoVehiculo;
 
 import java.time.LocalDateTime;
