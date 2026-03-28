@@ -2,7 +2,7 @@ package models.vehiculo.componente.motor;
 
 public class MotorElectrico extends Motor {
 
-    public MotorElectrico(int cilindrada, int potencia, int numCilindros) {
-        super("Motor Eléctrico", cilindrada, potencia, numCilindros);
+    public MotorElectrico(int stock, int cilindrada, int potencia, int numCilindros) {
+        super("Motor Eléctrico", stock, cilindrada, potencia, numCilindros);
     }
 }

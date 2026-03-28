@@ -5,8 +5,8 @@ import models.vehiculo.componente.Componente;
 public abstract class Tapiceria extends Componente {
     protected String color;
     protected int metrosCuadrados;
-    public Tapiceria(String nombre, String color, int metrosCuadrados) {
-        super(nombre);
+    public Tapiceria(String nombre, int stock, String color, int metrosCuadrados) {
+        super(nombre, stock);
         this.color = color;
         this.metrosCuadrados = metrosCuadrados;
     }
@@ -14,5 +14,13 @@ public abstract class Tapiceria extends Componente {
     @Override
     public String toString() {
         return "Color: " + color + ", Dimensiones: " + metrosCuadrados + ".";
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public int getMetrosCuadrados() {
+        return metrosCuadrados;
     }
 }

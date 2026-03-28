@@ -5,10 +5,12 @@ import java.util.UUID;
 public abstract class Componente {
     protected String nombre;
     protected String id;
+    protected int stock;
 
-    public Componente(String nombre) {
+    public Componente(String nombre, int stock) {
         this.nombre = nombre;
         this.id = UUID.randomUUID().toString();
+        this.stock = stock;
     }
 
     public String getNombre() {
@@ -17,4 +19,8 @@ public abstract class Componente {
 
     @Override
     public abstract String toString();
+
+    public int getStock() {
+        return stock;
+    }
 }

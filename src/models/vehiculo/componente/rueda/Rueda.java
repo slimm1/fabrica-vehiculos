@@ -17,9 +17,9 @@ public abstract class Rueda extends Componente {
     // Aunque es una letra (ej: 'V'), pides representarlo por su valor en km/h
     protected int codigoVelocidadKmh;
 
-    public Rueda(String nombre, int anchoMm, int diametroLlantaPulgadas,
+    public Rueda(String nombre, int stock, int anchoMm, int diametroLlantaPulgadas,
                  int indiceCargaKg, int codigoVelocidadKmh) {
-        super(nombre);
+        super(nombre, stock);
         this.anchoMm = anchoMm;
         this.diametroPulgadas = diametroLlantaPulgadas;
         this.indiceCargaKg = indiceCargaKg;
@@ -29,5 +29,21 @@ public abstract class Rueda extends Componente {
     @Override
     public String toString() {
         return anchoMm + "/" + diametroPulgadas + " [ Índice de carga (kg): " + indiceCargaKg + ", Cod. Velocidad: " + codigoVelocidadKmh +" ]";
+    }
+
+    public int getAnchoMm() {
+        return anchoMm;
+    }
+
+    public double getDiametroPulgadas() {
+        return diametroPulgadas;
+    }
+
+    public int getIndiceCargaKg() {
+        return indiceCargaKg;
+    }
+
+    public int getCodigoVelocidadKmh() {
+        return codigoVelocidadKmh;
     }
 }

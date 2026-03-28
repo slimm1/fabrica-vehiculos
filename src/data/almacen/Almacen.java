@@ -136,11 +136,14 @@ public class Almacen implements IAlmacen {
         Map<String, Integer> resumen = new LinkedHashMap<>();
 
         motores.forEach((clase, lista) -> resumen.put(
-                lista.isEmpty() ? clase.getSimpleName() : lista.get(0).getNombre(), lista.size()));
+                lista.isEmpty() ? clase.getSimpleName() : lista.get(0).getNombre(),
+                lista.stream().mapToInt(Motor::getStock).sum()));
         ruedas.forEach((clase, lista) -> resumen.put(
-                lista.isEmpty() ? clase.getSimpleName() : lista.get(0).getNombre(), lista.size()));
+                lista.isEmpty() ? clase.getSimpleName() : lista.get(0).getNombre(),
+                lista.stream().mapToInt(Rueda::getStock).sum()));
         tapicerias.forEach((clase, lista) -> resumen.put(
-                lista.isEmpty() ? clase.getSimpleName() : lista.get(0).getNombre(), lista.size()));
+                lista.isEmpty() ? clase.getSimpleName() : lista.get(0).getNombre(),
+                lista.stream().mapToInt(Tapiceria::getStock).sum()));
 
         return resumen;
     }

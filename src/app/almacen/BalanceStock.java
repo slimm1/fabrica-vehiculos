@@ -4,6 +4,7 @@ import data.almacen.IAlmacen;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.util.Map;
 
@@ -30,8 +31,15 @@ public class BalanceStock extends JDialog {
         Map<String, Integer> resumen = almacen.obtenerResumenStockComponentes();
         resumen.forEach((nombre, cantidad) -> modelo.addRow(new Object[]{nombre, cantidad}));
 
-        JTable tabla = new JTable(modelo);
-        tabla.setFillsViewportHeight(true);
+        JTable tabla = new JTable(modelo) {
+            @Override
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                Component c = super.prepareRenderer(renderer, row, column);
+                int stock = (int) getValueAt(row, 1);
+                c.setBackground(stock < 10 ? new Color(255, 180, 180) : getBackground());
+                return c;
+            }
+        };        tabla.setFillsViewportHeight(true);
         tabla.getTableHeader().setReorderingAllowed(false);
 
         return new JScrollPane(tabla);

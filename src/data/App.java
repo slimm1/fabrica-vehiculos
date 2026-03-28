@@ -128,11 +128,12 @@ public class App {
         for (int i = 0; i < cantMotores; i++) {
             int tipo = rnd.nextInt(3);
             int cv = 100 + rnd.nextInt(200);
+            int stock = 1 + rnd.nextInt(10);
 
             switch (tipo) {
-                case 0 -> almacen.agregarMotor(new MotorElectrico(cv, 150, 4));
-                case 1 -> almacen.agregarMotor(new MotorGasolina(cv + 50, 180, 6));
-                case 2 -> almacen.agregarMotor(new MotorHibrido(cv, 160, 4));
+                case 0 -> almacen.agregarMotor(new MotorElectrico(stock, cv, 150, 4));
+                case 1 -> almacen.agregarMotor(new MotorGasolina(stock, cv + 50, 180, 6));
+                case 2 -> almacen.agregarMotor(new MotorHibrido(stock, cv, 160, 4));
             }
         }
 
@@ -142,11 +143,12 @@ public class App {
             int tipo = rnd.nextInt(3);
             String color = colores[rnd.nextInt(colores.length)];
             int precio = 20 + rnd.nextInt(20);
+            int stock = 1 + rnd.nextInt(15);
 
             switch (tipo) {
-                case 0 -> almacen.agregarTapiceria(new TapiceriaTela(color, precio));
-                case 1 -> almacen.agregarTapiceria(new TapiceriaCuero(color, precio + 15));
-                case 2 -> almacen.agregarTapiceria(new TapiceriaAlcantara(color, precio + 10));
+                case 0 -> almacen.agregarTapiceria(new TapiceriaTela(stock, color, precio));
+                case 1 -> almacen.agregarTapiceria(new TapiceriaCuero(stock, color, precio + 15));
+                case 2 -> almacen.agregarTapiceria(new TapiceriaAlcantara(stock, color, precio + 10));
             }
         }
 
@@ -155,11 +157,12 @@ public class App {
             int tipo = rnd.nextInt(3);
             int ancho = 195 + (rnd.nextInt(5) * 10);
             int llanta = 15 + rnd.nextInt(5);
+            int stock = 1 + rnd.nextInt(25);
 
             switch (tipo) {
-                case 0 -> almacen.agregarRueda(new RuedaNormal(ancho, llanta, 800, 190));
-                case 1 -> almacen.agregarRueda(new RuedaDeportivo(ancho + 20, llanta + 1, 900, 240));
-                case 2 -> almacen.agregarRueda(new RuedaTodoterreno(ancho, llanta - 1, 1200, 170));
+                case 0 -> almacen.agregarRueda(new RuedaNormal(stock, ancho, llanta, 800, 190));
+                case 1 -> almacen.agregarRueda(new RuedaDeportivo(stock, ancho + 20, llanta + 1, 900, 240));
+                case 2 -> almacen.agregarRueda(new RuedaTodoterreno(stock, ancho, llanta - 1, 1200, 170));
             }
         }
 
@@ -170,22 +173,22 @@ public class App {
 
             int cv = 80 + rnd.nextInt(300);
             switch (rnd.nextInt(3)) {
-                case 0 -> comps.add(new MotorElectrico(cv, 150, 4));
-                case 1 -> comps.add(new MotorGasolina(cv, 200, 6));
-                case 2 -> comps.add(new MotorHibrido(cv, 180, 4));
+                case 0 -> comps.add(new MotorElectrico(1, cv, 150, 4));
+                case 1 -> comps.add(new MotorGasolina(1, cv, 200, 6));
+                case 2 -> comps.add(new MotorHibrido(1, cv, 180, 4));
             }
 
             String colTapiz = colores[rnd.nextInt(colores.length)];
             switch (rnd.nextInt(3)) {
-                case 0 -> comps.add(new TapiceriaTela(colTapiz, 20));
-                case 1 -> comps.add(new TapiceriaCuero(colTapiz, 50));
-                case 2 -> comps.add(new TapiceriaAlcantara(colTapiz, 35));
+                case 0 -> comps.add(new TapiceriaTela(1, colTapiz, 20));
+                case 1 -> comps.add(new TapiceriaCuero(1, colTapiz, 50));
+                case 2 -> comps.add(new TapiceriaAlcantara(1, colTapiz, 35));
             }
 
             switch (rnd.nextInt(3)) {
-                case 0 -> comps.add(new RuedaNormal(205, 16, 800, 190));
-                case 1 -> comps.add(new RuedaDeportivo(245, 19, 900, 280));
-                case 2 -> comps.add(new RuedaTodoterreno(225, 17, 1200, 170));
+                case 0 -> comps.add(new RuedaNormal(4, 205, 16, 800, 190));
+                case 1 -> comps.add(new RuedaDeportivo(4, 245, 19, 900, 280));
+                case 2 -> comps.add(new RuedaTodoterreno(4, 225, 17, 1200, 170));
             }
 
             Vehiculo v;

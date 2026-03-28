@@ -15,8 +15,8 @@ public abstract class Motor extends Componente {
     // Es un valor discreto y exacto, por lo que siempre es int
     protected int numeroCilindros;
 
-    public Motor(String nombre, int cilindrada, int potencia, int numCilindros) {
-        super(nombre);
+    public Motor(String nombre, int stock, int cilindrada, int potencia, int numCilindros) {
+        super(nombre, stock);
         this.cilindrada = cilindrada;
         this.potencia = potencia;
         this.numeroCilindros = numCilindros;
@@ -25,5 +25,17 @@ public abstract class Motor extends Componente {
     @Override
     public String toString() {
         return "Cilindrada: " + cilindrada + ", Potencia: " + potencia + ", Num. cilindros: " + numeroCilindros + ".";
+    }
+
+    public int getCilindrada() {
+        return cilindrada;
+    }
+
+    public double getPotencia() {
+        return potencia;
+    }
+
+    public int getNumeroCilindros() {
+        return numeroCilindros;
     }
 }
