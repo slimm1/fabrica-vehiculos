@@ -175,9 +175,9 @@ public class PlanificadorUI extends JDialog implements IPlanificadorUI {
 
             for (int i = 0; i < cantidad; i++) {
                 ArrayList<Componente> comps = new ArrayList<>();
-                comps.add(almacen.extraerMotor(motor.getClass()));
-                comps.add(almacen.extraerTapiceria(tap.getClass()));
-                comps.add(almacen.extraerRueda(rueda.getClass()));
+                comps.add(almacen.extraerMotor(motor.getId()));
+                comps.add(almacen.extraerTapiceria(tap.getId()));
+                comps.add(almacen.extraerRueda(rueda.getId()));
 
                 Vehiculo v = switch (tipoIdx) {
                     case 1  -> new Furgoneta(color, 3, 2100, 3500, comps);

@@ -10,10 +10,10 @@ import java.util.*;
 
 public class Almacen implements IAlmacen {
 
-    private Map<Class<? extends Motor>,    Motor>    motores;
-    private Map<Class<? extends Tapiceria>, Tapiceria> tapicerias;
-    private Map<Class<? extends Rueda>,    Rueda>    ruedas;
-    private Map<String, Vehiculo>                    vehiculos;
+    private Map<String, Motor>     motores;
+    private Map<String, Tapiceria> tapicerias;
+    private Map<String, Rueda>     ruedas;
+    private Map<String, Vehiculo>  vehiculos;
 
     public Almacen() {
         this.motores    = new HashMap<>();
@@ -22,30 +22,19 @@ public class Almacen implements IAlmacen {
         this.vehiculos  = new HashMap<>();
     }
 
-    // ── Agregar ───────────────────────────────────────────────────────────────
-
     @Override
     public void agregarMotor(Motor motor) {
-        motores.merge(motor.getClass(), motor, (existing, nuevo) -> {
-            existing.setStock(existing.getStock() + nuevo.getStock());
-            return existing;
-        });
+        motores.put(motor.getId(), motor);
     }
 
     @Override
     public void agregarTapiceria(Tapiceria tapiceria) {
-        tapicerias.merge(tapiceria.getClass(), tapiceria, (existing, nuevo) -> {
-            existing.setStock(existing.getStock() + nuevo.getStock());
-            return existing;
-        });
+        tapicerias.put(tapiceria.getId(), tapiceria);
     }
 
     @Override
     public void agregarRueda(Rueda rueda) {
-        ruedas.merge(rueda.getClass(), rueda, (existing, nuevo) -> {
-            existing.setStock(existing.getStock() + nuevo.getStock());
-            return existing;
-        });
+        ruedas.put(rueda.getId(), rueda);
     }
 
     @Override
@@ -53,36 +42,29 @@ public class Almacen implements IAlmacen {
         vehiculos.put(vehiculo.getId(), vehiculo);
     }
 
-    // ── Extraer ───────────────────────────────────────────────────────────────
-
-    @Override
-    public Motor extraerMotor(Class<? extends Motor> tipo) {
-        Motor m = motores.get(tipo);
+    public Motor extraerMotor(String id) {
+        Motor m = motores.get(id);
         if (m == null || m.getStock() <= 0) return null;
         m.setStock(m.getStock() - 1);
-        if (m.getStock() == 0) motores.remove(tipo);
+        if (m.getStock() == 0) motores.remove(id);
         return m;
     }
 
-    @Override
-    public Tapiceria extraerTapiceria(Class<? extends Tapiceria> tipo) {
-        Tapiceria t = tapicerias.get(tipo);
+    public Tapiceria extraerTapiceria(String id) {
+        Tapiceria t = tapicerias.get(id);
         if (t == null || t.getStock() <= 0) return null;
         t.setStock(t.getStock() - 1);
-        if (t.getStock() == 0) tapicerias.remove(tipo);
+        if (t.getStock() == 0) tapicerias.remove(id);
         return t;
     }
 
-    @Override
-    public Rueda extraerRueda(Class<? extends Rueda> tipo) {
-        Rueda r = ruedas.get(tipo);
+    public Rueda extraerRueda(String id) {
+        Rueda r = ruedas.get(id);
         if (r == null || r.getStock() < 4) return null;
         r.setStock(r.getStock() - 4);
-        if (r.getStock() == 0) ruedas.remove(tipo);
+        if (r.getStock() == 0) ruedas.remove(id);
         return r;
     }
-
-    // ── Obtener ───────────────────────────────────────────────────────────────
 
     @Override
     public Vehiculo obtenerVehiculo(String id) {
@@ -118,27 +100,20 @@ public class Almacen implements IAlmacen {
         return todos;
     }
 
-    // ── Stock ─────────────────────────────────────────────────────────────────
-
-    @Override
-    public boolean hayStockMotor(Class<? extends Motor> tipo, int cantidad) {
-        Motor m = motores.get(tipo);
+    public boolean hayStockMotor(String id, int cantidad) {
+        Motor m = motores.get(id);
         return m != null && m.getStock() >= cantidad;
     }
 
-    @Override
-    public boolean hayStockTapiceria(Class<? extends Tapiceria> tipo, int cantidad) {
-        Tapiceria t = tapicerias.get(tipo);
+    public boolean hayStockTapiceria(String id, int cantidad) {
+        Tapiceria t = tapicerias.get(id);
         return t != null && t.getStock() >= cantidad;
     }
 
-    @Override
-    public boolean hayStockRueda(Class<? extends Rueda> tipo, int cantidad) {
-        Rueda r = ruedas.get(tipo);
+    public boolean hayStockRueda(String id, int cantidad) {
+        Rueda r = ruedas.get(id);
         return r != null && r.getStock() >= cantidad * 4;
     }
-
-    // ── Resumen ───────────────────────────────────────────────────────────────
 
     @Override
     public Map<String, Integer> obtenerResumenStockComponentes() {

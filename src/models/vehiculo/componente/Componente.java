@@ -17,6 +17,10 @@ public abstract class Componente {
         return nombre;
     }
 
+    public String getId() {
+        return id;
+    }
+
     @Override
     public abstract String toString();
 

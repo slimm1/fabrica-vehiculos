@@ -15,14 +15,14 @@ public interface IAlmacen {
     void agregarRueda(Rueda rueda);
     void agregarVehiculo(Vehiculo vehiculo);
 
-    Motor extraerMotor(Class<? extends Motor> tipo);
-    Tapiceria extraerTapiceria(Class<? extends Tapiceria> tipo);
-    Rueda extraerRueda(Class<? extends Rueda> tipo);
+    Motor extraerMotor(String nombre);
+    Tapiceria extraerTapiceria(String nombre);
+    Rueda extraerRueda(String nombre);
     Vehiculo obtenerVehiculo(String id);
 
-    boolean hayStockMotor(Class<? extends Motor> tipo, int cantidad);
-    boolean hayStockTapiceria(Class<? extends Tapiceria> tipo, int cantidad);
-    boolean hayStockRueda(Class<? extends Rueda> tipo, int cantidad);
+    boolean hayStockMotor(String nombre, int cantidad);
+    boolean hayStockTapiceria(String nombre, int cantidad);
+    boolean hayStockRueda(String nombre, int cantidad);
 
     Map<String, Integer> obtenerResumenStockComponentes();
 
