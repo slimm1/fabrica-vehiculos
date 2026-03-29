@@ -17,6 +17,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Diálogo Swing principal del planificador. Permite añadir vehículos a la
+ * cola seleccionando tipo, color y componentes del almacén, lanzar los tres
+ * modos de simulación en un hilo aparte y seguir el progreso en tiempo real
+ * mediante logs y actualización del estado en la tabla de cola.
+ */
 public class PlanificadorUI extends JDialog implements IPlanificadorUI {
 
     private final IGestorCadenasMontaje gestorCadenasMontaje;

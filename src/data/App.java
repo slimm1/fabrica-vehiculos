@@ -8,8 +8,8 @@ import data.gestion.IGestorTrabajadores;
 import data.gestion.GestorCadenasMontaje;
 import models.trabajador.TrabajadorAdministrador;
 import models.trabajador.TrabajadorGestorPlanta;
-import models.trabajador.mecanico.TrabajadorMecanicoCinta;
-import models.trabajador.operario.TrabajadorOperario;
+import models.trabajador.TrabajadorMecanicoCinta;
+import models.trabajador.TrabajadorOperario;
 import models.vehiculo.*;
 import models.vehiculo.componente.Componente;
 import models.vehiculo.componente.motor.MotorElectrico;
@@ -26,6 +26,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Punto de entrada y composición raíz de la aplicación. Inicializa el
+ * almacén con stock aleatorio, crea los trabajadores de todos los roles
+ * y construye el gestor de cadenas de montaje integrando ambas dependencias.
+ */
 public class App {
 
     IGestorTrabajadores gestorTrabajadores;

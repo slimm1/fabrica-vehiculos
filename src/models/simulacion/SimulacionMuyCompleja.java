@@ -3,12 +3,17 @@ package models.simulacion;
 import data.gestion.GestorCadenasMontaje;
 import models.montaje.CadenaMontaje;
 import models.trabajador.TrabajadorAdministrador;
-import models.trabajador.mecanico.TrabajadorMecanicoCinta;
-import models.trabajador.operario.Robot;
+import models.trabajador.TrabajadorMecanicoCinta;
+import models.trabajador.Robot;
 import models.vehiculo.Vehiculo;
 
 import java.util.List;
 
+/**
+ * Extiende SimulacionCompleja añadiendo caídas de luz. Antes de cada paso
+ * comprueba si toca apagón (administrador restaura en 5s) y luego si toca
+ * error de mecánico, resolviendo ambos eventos antes de montar el componente.
+ */
 public class SimulacionMuyCompleja extends SimulacionCompleja {
     private int caidas;
 
@@ -49,7 +54,7 @@ public class SimulacionMuyCompleja extends SimulacionCompleja {
                 cadenaMontaje.detener();
                 TrabajadorMecanicoCinta mecanico = mecanicos.get((int)(Math.random() * mecanicos.size()));
                 int tiempoReparacion = mecanico.getTiempoReparacion();
-                mecanico.incrementarReparaciones();
+                mecanico.trabajar();
                 cadenaMontaje.anadirRegistro(mecanico);
                 tiempoActual += tiempoReparacion;
                 if (listener != null) {

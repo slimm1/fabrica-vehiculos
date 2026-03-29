@@ -1,6 +1,5 @@
 package app;
 
-import app.almacen.BalanceStock;
 import app.almacen.componentes.IListaComponentes;
 import app.almacen.componentes.ListaComponentes;
 import app.empleados.IListaEmpleados;
@@ -16,11 +15,16 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 
-public class MainMenu extends JPanel implements IMainMenu {
+/**
+ * Panel principal de navegación. Agrupa los accesos a las tres secciones
+ * (Personal, Almacén, Producción) y actúa como punto de entrada a todos
+ * los diálogos de la aplicación.
+ */
+public class Dashboard extends JPanel implements IDashboard {
     private JFrame parentFrame;
     private App app;
 
-    public MainMenu(JFrame parentFrame, App app) {
+    public Dashboard(JFrame parentFrame, App app) {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         this.setBackground(Color.LIGHT_GRAY);

@@ -1,7 +1,6 @@
 package models.trabajador;
 
 import data.almacen.IAlmacen;
-import models.trabajador.operario.Robot;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,7 +15,6 @@ public class TrabajadorGestorPlanta extends Trabajador {
     }
 
     public void llamarMecanico() {
-        // Llamar a mecánico de cinta para reparación
     }
 
     @Override

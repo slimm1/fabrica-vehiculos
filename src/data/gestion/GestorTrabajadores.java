@@ -3,14 +3,19 @@ package data.gestion;
 import models.trabajador.Trabajador;
 import models.trabajador.TrabajadorAdministrador;
 import models.trabajador.TrabajadorGestorPlanta;
-import models.trabajador.mecanico.TrabajadorMecanicoCinta;
-import models.trabajador.operario.TrabajadorOperario;
+import models.trabajador.TrabajadorMecanicoCinta;
+import models.trabajador.TrabajadorOperario;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Implementación de IGestorTrabajadores. Mantiene un mapa dni → Trabajador
+ * y ofrece consultas filtradas por rol: operarios, mecánicos, gestor de
+ * planta y administrador.
+ */
 public class GestorTrabajadores implements IGestorTrabajadores {
     private Map<String, Trabajador> trabajadores;
 

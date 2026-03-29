@@ -2,9 +2,14 @@ package models.simulacion;
 
 import data.gestion.GestorCadenasMontaje;
 import models.montaje.CadenaMontaje;
-import models.trabajador.operario.Robot;
+import models.trabajador.Robot;
 import models.vehiculo.Vehiculo;
 
+/**
+ * Simulación sin incidencias. Avanza paso a paso montando componentes con
+ * el robot correspondiente hasta completar el vehículo, sin interrupciones
+ * por errores ni apagones.
+ */
 public class SimulacionSimple extends Simulacion {
 
     public SimulacionSimple(GestorCadenasMontaje gestorCadenasMontaje) {

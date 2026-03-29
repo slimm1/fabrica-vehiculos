@@ -13,6 +13,11 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+/**
+ * Diálogo Swing que lista los vehículos ensamblados en una tabla ordenable,
+ * con filtro general por texto y filtro por componente. El doble clic sobre
+ * una fila abre el DetalleVehiculo correspondiente.
+ */
 public class ListaVehiculos extends JDialog implements IListaVehiculos {
     private JTable tabla;
     private DefaultTableModel modelo;

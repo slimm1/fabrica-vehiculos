@@ -8,6 +8,12 @@ import models.vehiculo.componente.tapiceria.Tapiceria;
 
 import java.util.*;
 
+/**
+ * Implementación de IAlmacen. Gestiona cuatro mapas (id → entidad) para
+ * motores, tapicerías, ruedas y vehículos. La extracción de componentes
+ * descuenta stock y elimina la entrada al llegar a 0; las ruedas se
+ * consumen en grupos de 4.
+ */
 public class Almacen implements IAlmacen {
 
     private Map<String, Motor>     motores;

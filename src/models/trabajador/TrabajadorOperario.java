@@ -1,9 +1,12 @@
-package models.trabajador.operario;
-
-import models.trabajador.Trabajador;
+package models.trabajador;
 
 import java.time.LocalDateTime;
 
+/**
+ * Operario de montaje. Si ha realizado más de 10 montajes es eficiente
+ * (1s por tarea), en caso contrario tarda 3s. Cada llamada a trabajar()
+ * incrementa su contador de montajes.
+ */
 public class TrabajadorOperario extends Trabajador {
     protected int montajesRealizados;
 

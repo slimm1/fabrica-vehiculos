@@ -1,5 +1,5 @@
-import app.IMainMenu;
-import app.MainMenu;
+import app.IDashboard;
+import app.Dashboard;
 import data.App;
 
 import javax.swing.*;
@@ -13,7 +13,7 @@ public class Main {
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(400, 400);
 
-            IMainMenu menuPrincipal = new MainMenu(frame, app);
+            IDashboard menuPrincipal = new Dashboard(frame, app);
             frame.add(menuPrincipal.getPanel());
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);

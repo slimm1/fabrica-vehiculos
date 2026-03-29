@@ -4,13 +4,18 @@ import exception.EmptyFieldException;
 import models.trabajador.Trabajador;
 import models.trabajador.TrabajadorAdministrador;
 import models.trabajador.TrabajadorGestorPlanta;
-import models.trabajador.mecanico.TrabajadorMecanicoCinta;
-import models.trabajador.operario.TrabajadorOperario;
+import models.trabajador.TrabajadorMecanicoCinta;
+import models.trabajador.TrabajadorOperario;
 
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDateTime;
 
+/**
+ * Diálogo Swing con formulario para dar de alta un nuevo trabajador.
+ * Valida campos obligatorios y formato de salario, e instancia el tipo
+ * concreto según el combo (Operario, Mecánico, Administrador, Gestor de Planta).
+ */
 public class FormularioNuevoEmpleado extends JDialog {
     private JTextField txtNombre, txtApellidos, txtDni, txtDireccion, txtNumSS, txtSalario;
     private Trabajador trabajador;

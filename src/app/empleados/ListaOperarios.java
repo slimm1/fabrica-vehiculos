@@ -2,7 +2,7 @@ package app.empleados;
 
 import data.gestion.IGestorTrabajadores;
 import models.trabajador.Trabajador;
-import models.trabajador.operario.TrabajadorOperario;
+import models.trabajador.TrabajadorOperario;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -13,6 +13,10 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Diálogo Swing que lista únicamente los operarios con su número de montajes,
+ * ordenados de mayor a menor por esa columna. Permite filtrar por texto.
+ */
 public class ListaOperarios extends JDialog implements IListaEmpleados {
     private JTable tabla;
     private DefaultTableModel modelo;

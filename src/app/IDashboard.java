@@ -2,7 +2,7 @@ package app;
 
 import javax.swing.JPanel;
 
-public interface IMainMenu {
+public interface IDashboard {
     JPanel getPanel();
 
     void configurarAcciones();

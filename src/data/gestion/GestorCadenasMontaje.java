@@ -8,8 +8,8 @@ import models.montaje.CadenaMontajeFurgoneta;
 import models.montaje.CadenaMontajeTurismo;
 import models.simulacion.*;
 import models.trabajador.TrabajadorAdministrador;
-import models.trabajador.operario.Robot;
-import models.trabajador.operario.TrabajadorOperario;
+import models.trabajador.Robot;
+import models.trabajador.TrabajadorOperario;
 import models.vehiculo.BiplazaDeportivo;
 import models.vehiculo.Furgoneta;
 import models.vehiculo.Turismo;
@@ -17,6 +17,13 @@ import models.vehiculo.Vehiculo;
 
 import java.util.*;
 
+/**
+ * Gestiona las tres cadenas de montaje (Turismo, BiplazaDeportivo, Furgoneta)
+ * y la cola de vehículos pendientes. Ofrece tres modos de simulación:
+ * simple (sin errores), compleja (2-3 errores de mecánico por cadena) y
+ * muy compleja (errores de mecánico + caída de luz). Permite pausar y
+ * restaurar el sistema ante fallos.
+ */
 public class GestorCadenasMontaje implements IGestorCadenasMontaje {
     private IAlmacen almacen;
     private IGestorTrabajadores gestorTrabajadores;

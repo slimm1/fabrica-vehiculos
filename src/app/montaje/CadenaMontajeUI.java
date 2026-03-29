@@ -12,6 +12,11 @@ import java.awt.*;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * Diálogo Swing que muestra las tres cadenas de montaje en columnas paralelas.
+ * Cada tabla lista sus registros (montaje/error), resaltando en rojo los de
+ * error. El doble clic sobre una fila abre el detalle completo del registro.
+ */
 public class CadenaMontajeUI extends JDialog {
 
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("HH:mm:ss");

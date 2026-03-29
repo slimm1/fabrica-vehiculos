@@ -2,12 +2,17 @@ package models.simulacion;
 
 import data.gestion.GestorCadenasMontaje;
 import models.montaje.CadenaMontaje;
-import models.trabajador.mecanico.TrabajadorMecanicoCinta;
-import models.trabajador.operario.Robot;
+import models.trabajador.TrabajadorMecanicoCinta;
+import models.trabajador.Robot;
 import models.vehiculo.Vehiculo;
 
 import java.util.List;
 
+/**
+ * Simulación con errores de mecánico. En los pasos marcados como erróneos,
+ * detiene la cadena, asigna un mecánico aleatorio para reparar (sumando su
+ * tiempo al total) y la reanuda antes de continuar.
+ */
 public class SimulacionCompleja extends Simulacion {
 
     public SimulacionCompleja(GestorCadenasMontaje sistema) {
@@ -28,7 +33,7 @@ public class SimulacionCompleja extends Simulacion {
                 cadenaMontaje.detener();
                 TrabajadorMecanicoCinta mecanico = mecanicos.get((int)(Math.random() * mecanicos.size()));
                 int tiempoReparacion = mecanico.getTiempoReparacion();
-                mecanico.incrementarReparaciones();
+                mecanico.trabajar();
                 tiempoActual += tiempoReparacion;
                 cadenaMontaje.anadirRegistro(mecanico);
                 if (listener != null) {

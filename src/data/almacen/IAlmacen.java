@@ -9,6 +9,10 @@ import models.vehiculo.componente.tapiceria.Tapiceria;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * Contrato para la gestión del almacén: alta y extracción de componentes
+ * (Motor, Rueda, Tapicería) y vehículos, consulta de stock y listados.
+ */
 public interface IAlmacen {
     void agregarMotor(Motor motor);
     void agregarTapiceria(Tapiceria tapiceria);

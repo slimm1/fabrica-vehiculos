@@ -2,6 +2,11 @@ package models.vehiculo.componente.tapiceria;
 
 import models.vehiculo.componente.Componente;
 
+/**
+ * Clase base de las tapicerías. Extiende Componente añadiendo color y
+ * metros cuadrados. Las subclases concretan el material (tela, cuero,
+ * alcántara).
+ */
 public abstract class Tapiceria extends Componente {
     protected String color;
     protected int metrosCuadrados;

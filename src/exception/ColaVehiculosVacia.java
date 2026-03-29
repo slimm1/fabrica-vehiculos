@@ -1,5 +1,9 @@
 package exception;
 
+/**
+ * Excepción lanzada al intentar iniciar una simulación con la cola de
+ * vehículos vacía.
+ */
 public class ColaVehiculosVacia extends Exception {
 
     public ColaVehiculosVacia() {

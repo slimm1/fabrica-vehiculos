@@ -12,6 +12,11 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * Ventana Swing que muestra las tres tablas de componentes (motores, ruedas,
+ * tapicerías) con su stock total y permite añadir nuevos elementos mediante
+ * formularios modales. También da acceso al balance de stock global.
+ */
 public class ListaComponentes extends JDialog implements IListaComponentes {
 
     private JTable tablaMotores;
@@ -119,8 +124,6 @@ public class ListaComponentes extends JDialog implements IListaComponentes {
         lblTotalTapicerias.setText("Total stock: " + total);
     }
 
-    // ── Formulario Motor ──────────────────────────────────────────────────────
-
     private void abrirFormularioMotor() {
         JDialog dialog = new JDialog(this, "Nuevo Motor", true);
         dialog.setSize(350, 250);
@@ -171,8 +174,6 @@ public class ListaComponentes extends JDialog implements IListaComponentes {
         dialog.add(btnGuardar, gbc);
         dialog.setVisible(true);
     }
-
-    // ── Formulario Rueda ──────────────────────────────────────────────────────
 
     private void abrirFormularioRueda() {
         JDialog dialog = new JDialog(this, "Nueva Rueda", true);
@@ -228,8 +229,6 @@ public class ListaComponentes extends JDialog implements IListaComponentes {
         dialog.setVisible(true);
     }
 
-    // ── Formulario Tapicería ──────────────────────────────────────────────────
-
     private void abrirFormularioTapiceria() {
         JDialog dialog = new JDialog(this, "Nueva Tapicería", true);
         dialog.setSize(350, 220);
@@ -283,8 +282,6 @@ public class ListaComponentes extends JDialog implements IListaComponentes {
         dialog.setVisible(true);
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
-
     private GridBagConstraints defaultGbc() {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 10, 5, 10);
@@ -300,8 +297,6 @@ public class ListaComponentes extends JDialog implements IListaComponentes {
         gbc.anchor = GridBagConstraints.WEST;
         dialog.add(campo, gbc);
     }
-
-    // ── IListaComponentes ─────────────────────────────────────────────────────
 
     @Override
     public void cargarMotores(List<Motor> motores) {

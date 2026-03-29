@@ -8,6 +8,10 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.util.Map;
 
+/**
+ * Diálogo Swing que muestra el stock de todos los componentes en una tabla.
+ * Las filas con stock inferior a 10 se resaltan en rojo.
+ */
 public class BalanceStock extends JDialog {
     private IAlmacen almacen;
 

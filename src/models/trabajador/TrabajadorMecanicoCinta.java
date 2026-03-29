@@ -1,9 +1,12 @@
-package models.trabajador.mecanico;
-
-import models.trabajador.Trabajador;
+package models.trabajador;
 
 import java.time.LocalDateTime;
 
+/**
+ * Mecánico de cinta. Su tiempo de reparación depende de si es eficiente
+ * (más de 20 reparaciones realizadas): 1s si lo es, entre 2 y 5s si no.
+ * Cada reparación incrementa su contador.
+ */
 public class TrabajadorMecanicoCinta extends Trabajador {
     private int reparacionesRealizadas;
 
@@ -21,9 +24,6 @@ public class TrabajadorMecanicoCinta extends Trabajador {
         this.reparacionesRealizadas++;
     }
 
-    public int getReparacionesRealizadas() {
-        return this.reparacionesRealizadas;
-    }
 
     public int getTiempoReparacion() {
         if(this.esEficiente()) {
@@ -34,7 +34,7 @@ public class TrabajadorMecanicoCinta extends Trabajador {
 
     @Override
     public void trabajar() {
-
+        incrementarReparaciones();
     }
 
     public String getPuesto() {

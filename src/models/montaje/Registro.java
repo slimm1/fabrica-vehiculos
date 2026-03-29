@@ -7,6 +7,11 @@ import models.vehiculo.componente.Componente;
 
 import java.time.LocalDateTime;
 
+/**
+ * Clase base para los registros de actividad de una cadena de montaje.
+ * Almacena el vehículo, componente, trabajador, estado del vehículo y
+ * timestamp. Las subclases concretan si es un registro de montaje o de error.
+ */
 public abstract class Registro {
     protected Vehiculo vehiculo;
     protected EstadoVehiculo estadoVehiculo;

@@ -12,6 +12,11 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Diálogo Swing que lista todos los trabajadores en una tabla ordenable y
+ * filtrable por texto. Permite añadir nuevos empleados abriendo el
+ * FormularioNuevoEmpleado y recargando la tabla tras el alta.
+ */
 public class ListaEmpleados extends JDialog implements IListaEmpleados {
     private JTable tabla;
     private DefaultTableModel modelo;

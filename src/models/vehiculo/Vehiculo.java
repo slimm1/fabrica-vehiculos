@@ -1,9 +1,5 @@
 package models.vehiculo;
 
-import models.trabajador.TrabajadorAdministrador;
-import models.trabajador.TrabajadorGestorPlanta;
-import models.trabajador.mecanico.TrabajadorMecanicoCinta;
-import models.trabajador.operario.TrabajadorOperario;
 import models.vehiculo.componente.Componente;
 import models.vehiculo.componente.motor.Motor;
 import models.vehiculo.componente.rueda.Rueda;
@@ -14,6 +10,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Clase base de todos los vehículos. Gestiona el ciclo de montaje mediante
+ * un índice sobre la secuencia fija de estados (CHASIS → MOTOR → TAPICERIA
+ * → RUEDAS → FINALIZADO) y mantiene la lista de componentes asignados.
+ * Las subclases concretan el tipo de vehículo (Turismo, Furgoneta,
+ * BiplazaDeportivo).
+ */
 public abstract class Vehiculo {
     public String id;
     protected String color;

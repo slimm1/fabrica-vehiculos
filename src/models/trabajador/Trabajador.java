@@ -1,12 +1,15 @@
 package models.trabajador;
 
 
-import models.trabajador.mecanico.TrabajadorMecanicoCinta;
-import models.trabajador.operario.TrabajadorOperario;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Clase base de todos los trabajadores. Contiene los datos personales y
+ * laborales comunes (nombre, DNI, salario, fecha de ingreso) y delega en
+ * las subclases la implementación de trabajar(). El puesto se resuelve
+ * por instanceof sobre la jerarquía concreta.
+ */
 public abstract class Trabajador {
     protected String nombre;
     protected String apellidos;
@@ -58,32 +61,12 @@ public abstract class Trabajador {
         return direccion;
     }
 
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
-
     public String getNumSeguridadSocial() {
         return numSeguridadSocial;
     }
 
-    public void setNumSeguridadSocial(String numSeguridadSocial) {
-        this.numSeguridadSocial = numSeguridadSocial;
-    }
-
     public double getSalario() {
         return salario;
-    }
-
-    public void setSalario(double salario) {
-        this.salario = salario;
-    }
-
-    public LocalDateTime getFechaIngreso() {
-        return fechaIngreso;
-    }
-
-    public void setFechaIngreso(LocalDateTime fechaIngreso) {
-        this.fechaIngreso = fechaIngreso;
     }
 
     public String getPuesto() {

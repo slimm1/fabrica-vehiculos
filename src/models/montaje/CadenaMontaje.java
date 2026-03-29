@@ -2,8 +2,8 @@ package models.montaje;
 
 import models.trabajador.Trabajador;
 import models.trabajador.TrabajadorAdministrador;
-import models.trabajador.mecanico.TrabajadorMecanicoCinta;
-import models.trabajador.operario.Robot;
+import models.trabajador.TrabajadorMecanicoCinta;
+import models.trabajador.Robot;
 import models.vehiculo.EstadoVehiculo;
 import models.vehiculo.Vehiculo;
 
@@ -12,6 +12,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Clase base de las cadenas de montaje. Gestiona los cuatro robots
+ * (chasis, ruedas, tapicería, motor), el historial de registros y el
+ * estado de simulación (pasos con error y caída de luz). Las subclases
+ * especializan el tipo de vehículo que procesan.
+ */
 public abstract class CadenaMontaje {
     protected List<Robot> robots;
     protected List<Registro> registros;
@@ -42,18 +48,6 @@ public abstract class CadenaMontaje {
 
     public List<Registro> getRegistros() {
         return registros;
-    }
-
-    public void setRobots(List<Robot> robots) {
-        this.robots = robots;
-    }
-
-    public boolean isFuncionando() {
-        return funcionando;
-    }
-
-    public void setFuncionando(boolean funcionando) {
-        this.funcionando = funcionando;
     }
 
     public Vehiculo getVehiculo() {
@@ -98,15 +92,13 @@ public abstract class CadenaMontaje {
                 .orElse(null);
     }
 
-    public Set<Integer> getPasosConError() { return pasosConError; }
     public void setPasosConError(Set<Integer> pasos) { this.pasosConError = pasos; }
-    public int getPasoActual() { return pasoActual; }
+
     public void incrementarPasoActual() { this.pasoActual++; }
     public boolean hayErrorEnPasoActual() { return pasosConError.contains(pasoActual); }
-    public int getErroresALanzar() { return erroresALanzar; }
+
     public void setErroresALanzar(int errores) { this.erroresALanzar = errores; }
 
-    public int getPasoCaida() { return pasoCaida; }
     public void setPasoCaida(int pasoCaida) { this.pasoCaida = pasoCaida; }
     public boolean hayCaidaEnPasoActual() { return pasoActual == pasoCaida; }
 

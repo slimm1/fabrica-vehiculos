@@ -8,6 +8,11 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
+/**
+ * Diálogo Swing que muestra los datos técnicos de un vehículo concreto
+ * (id, tipo, color, estado) y la tabla de componentes instalados,
+ * consultando el almacén por id.
+ */
 public class DetalleVehiculo extends JDialog {
     private Vehiculo vehiculo;
 
@@ -26,7 +31,6 @@ public class DetalleVehiculo extends JDialog {
         setSize(700, 450);
         setLocationRelativeTo(padre);
 
-        // --- 1. CABECERA: Info General ---
         JPanel panelInfo = new JPanel(new GridLayout(0, 2, 5, 5));
         panelInfo.setBorder(BorderFactory.createTitledBorder("Información del Vehículo"));
 
@@ -48,7 +52,7 @@ public class DetalleVehiculo extends JDialog {
         for (Componente c : vehiculo.getComponentes()) {
             modeloTabla.addRow(new Object[]{
                     c.getNombre(),
-                    c.toString() // Asegúrate de tener el toString() en tus clases Componente
+                    c.toString()
             });
         }
 
@@ -56,13 +60,11 @@ public class DetalleVehiculo extends JDialog {
         JScrollPane scrollTabla = new JScrollPane(tablaComp);
         scrollTabla.setBorder(BorderFactory.createTitledBorder("Componentes Instalados"));
 
-        // --- 3. BOTÓN CERRAR ---
         JButton btnCerrar = new JButton("Cerrar");
         btnCerrar.addActionListener(e -> dispose());
         JPanel panelSur = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panelSur.add(btnCerrar);
 
-        // --- MONTAJE ---
         add(panelInfo, BorderLayout.NORTH);
         add(scrollTabla, BorderLayout.CENTER);
         add(panelSur, BorderLayout.SOUTH);
