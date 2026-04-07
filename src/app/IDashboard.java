@@ -1,9 +1,10 @@
 package app;
 
-import javax.swing.JPanel;
-
+/**
+ * Interfaz para definir el contrato del Dashboard. La clase que implemente esta interfaz debe tener estos métodos.
+ * Esta estrategia permite cambiar la implementación sin hacer grandes cambios en la arquitectura de la app.
+ */
 public interface IDashboard {
-    JPanel getPanel();
 
     void configurarAcciones();
 

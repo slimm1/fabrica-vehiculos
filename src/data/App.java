@@ -1,5 +1,7 @@
 package data;
 
+import app.Dashboard;
+import app.IDashboard;
 import data.almacen.Almacen;
 import data.almacen.IAlmacen;
 import data.gestion.GestorTrabajadores;
@@ -192,39 +194,6 @@ public class App {
         System.out.println("Almacén inicializado con stock aleatorio.");
     }
 
-    private static void crearCadenasMontaje(GestorCadenasMontaje sistema,
-                                            IGestorTrabajadores gestor) {
-//        List<Robot> robots = new ArrayList<>();
-//        robots.add(new Robot("R1", gestor.obtenerOperarios().get(0), EstadoVehiculo.CHASIS));
-//        robots.add(new Robot("R2", gestor.obtenerOperarios().get(0), EstadoVehiculo.MOTOR));
-//        robots.add(new Robot("R3", gestor.obtenerOperarios().get(0), EstadoVehiculo.RUEDAS));
-//        robots.add(new Robot("R4", gestor.obtenerOperarios().get(0), EstadoVehiculo.TAPICERIA));
-//
-//        ConfiguracionCadenaMontaje config = new ConfiguracionCadenaMontaje(
-//                MotorGasolina.class,
-//                TapiceriaTela.class,
-//                RuedaNormal.class
-//        );
-//
-//        CadenaMontaje cadena1 = new CadenaMontajeTurismo(robots, config);
-//        sistema.agregarCadenaMontaje(cadena1);
-    }
-
-//    private static void crearOrdenes(Planificador planificador) {
-//        OrdenProduccion orden = new OrdenProduccion(
-//                "ORD001",
-//                Turismo.class,
-//                5,
-//                MotorGasolina.class,
-//                TapiceriaTela.class,
-//                RuedaNormal.class
-//        );
-//
-//        for (int i = 0; i < orden.getCantidad(); i++) {
-//            planificador.agregarVehiculo(new Turismo("Rojo", 1200, 1500, 1000));
-//        }
-//    }
-
     public IGestorTrabajadores getGestorTrabajadores() {
         return gestorTrabajadores;
     }
@@ -235,5 +204,10 @@ public class App {
 
     public IGestorCadenasMontaje getGestorCadenasMontaje() {
         return gestorCadenasMontaje;
+    }
+
+    public void startApp() {
+        IDashboard dashboard = new Dashboard(this);
+        dashboard.init();
     }
 }
