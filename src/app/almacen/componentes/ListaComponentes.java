@@ -23,6 +23,7 @@ public class ListaComponentes extends JDialog implements IListaComponentes {
     private JTable tablaRuedas;
     private JTable tablaTapicerias;
 
+    // Incializar modelos de tablas
     private DefaultTableModel modeloMotores = new DefaultTableModel(new String[]{"Nombre", "Cilindrada", "Potencia (CV)", "Cilindros", "Stock"}, 0) {
         @Override public boolean isCellEditable(int r, int c) { return false; }
         @Override public Class<?> getColumnClass(int c) { return c == 4 ? Integer.class : String.class; }
@@ -46,6 +47,7 @@ public class ListaComponentes extends JDialog implements IListaComponentes {
 
     private IAlmacen almacen;
 
+    // Inicializa el listado de componentes a través del almacén
     public ListaComponentes(Frame padre, IAlmacen almacen) {
         super(padre, "Gestión de Componentes", true);
         setSize(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getSize());
@@ -56,6 +58,7 @@ public class ListaComponentes extends JDialog implements IListaComponentes {
         add(crearPanelBotones(), BorderLayout.SOUTH);
     }
 
+    // Crear los paneles
     private JPanel crearPanelListas() {
         JPanel panel = new JPanel(new GridLayout(1, 3, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));

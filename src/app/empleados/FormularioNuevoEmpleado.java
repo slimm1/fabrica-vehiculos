@@ -20,6 +20,8 @@ public class FormularioNuevoEmpleado extends JDialog {
     private JTextField txtNombre, txtApellidos, txtDni, txtDireccion, txtNumSS, txtSalario;
     private Trabajador trabajador;
     private JComboBox<String> comboTipo;
+
+    // Constructor. Inicializa el panel y añade los campos del formulario
     public FormularioNuevoEmpleado(Frame padre) {
         super(padre, "Nuevo Trabajador", true);
         setLayout(new BorderLayout(10, 10));
@@ -57,8 +59,10 @@ public class FormularioNuevoEmpleado extends JDialog {
         txtSalario = new JTextField();
         panelCampos.add(txtSalario);
 
+        // Botón de guardado y event listener
         JButton btnGuardar = new JButton("Guardar");
         btnGuardar.addActionListener(e -> {
+            // Inicializa this.trabajador con un nuevo objeto trabajador a partir del formulario.
             this.trabajador = crearTrabajador(txtNombre.getText(), txtApellidos.getText(), txtDni.getText(),
                 txtDireccion.getText(), txtNumSS.getText(), txtSalario.getText(), (String) comboTipo.getSelectedItem());
             if(this.trabajador != null) {
@@ -72,15 +76,19 @@ public class FormularioNuevoEmpleado extends JDialog {
         setLocationRelativeTo(padre);
     }
 
+    // Función auxiliar para crear un objeto TRrabajador a partir de los datos del formulario.
     public Trabajador crearTrabajador(String nombre, String apellidos, String dni, String direccion,
                                       String numSS, String salario, String tipo) {
         try {
+            // Validaciones básicas de cadena vacía.  Si falla lanza excepción
             if(nombre.isEmpty() || apellidos.isEmpty() || dni.isEmpty() || direccion.isEmpty() || numSS.isEmpty()
                     || salario.isEmpty()) {
                 throw new EmptyFieldException();
             }
+            // Validación de parseo de Double. Si falla va al catch.
             double salarioFinal = Double.parseDouble(salario);
             LocalDateTime fechaIngreso = LocalDateTime.now();
+            // Instancia Trabajador según el tipo de trabajador. Este parámetro se recoge del formulario.
             return switch (tipo) {
                 case "Operario" ->
                         new TrabajadorOperario(nombre, apellidos, dni, direccion, numSS, salarioFinal, fechaIngreso, 0);
@@ -93,22 +101,25 @@ public class FormularioNuevoEmpleado extends JDialog {
                 default -> null;
             };
         } catch(EmptyFieldException ex) {
+            // Muestra un diálogo con la información del error
             JOptionPane.showMessageDialog(this,
                     "Por favor, revisa el formulario. Parece que hay campos sin completar.",
                     "Formulario incompleto",
                     JOptionPane.WARNING_MESSAGE);
         } catch (NumberFormatException e) {
+            // Muestra un diálogo con la información del error
             JOptionPane.showMessageDialog(this,
                     "Por favor, introduce un salario válido (ejemplo: 1200.50).\nUsa el punto para los decimales.",
                     "Formato de salario incorrecto",
                     JOptionPane.WARNING_MESSAGE);
-
+            // focus en el elemento que ha fallado
             txtSalario.requestFocus();
             txtSalario.selectAll();
         }
         return null;
     }
 
+    // Devuelve la instancia de Trabajador creada a partir del formulario,
     public Trabajador getTrabajador() {
         return this.trabajador;
     }

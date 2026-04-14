@@ -30,13 +30,14 @@ public class ListaVehiculos extends JDialog implements IListaVehiculos {
             "ID", "Tipo", "Color", "Num. Plazas", "Tara", "Peso max. autorizado"
     };
 
+    // Inicializar la lista de Vehículos
     public ListaVehiculos(Frame padre, IAlmacen almacen) {
         super(padre, "Listado de Vehículos Ensamblados", true);
         this.almacen = almacen;
         setLayout(new BorderLayout());
         setSize(850, 550);
 
-        // ── Panel de filtros ──────────────────────────────────────────────────
+        // Panel de filtros
         JPanel panelFiltros = new JPanel(new GridLayout(2, 2, 10, 5));
         panelFiltros.setBorder(BorderFactory.createEmptyBorder(10, 10, 5, 10));
 
@@ -48,7 +49,7 @@ public class ListaVehiculos extends JDialog implements IListaVehiculos {
         panelFiltros.add(txtBusqueda);
         panelFiltros.add(txtComponente);
 
-        // ── Tabla ─────────────────────────────────────────────────────────────
+        // Inicializar modelo y tabla
         modelo = new DefaultTableModel(this.tableCols, 0) {
             @Override
             public boolean isCellEditable(int row, int column) { return false; }
@@ -63,7 +64,7 @@ public class ListaVehiculos extends JDialog implements IListaVehiculos {
         sorter = new TableRowSorter<>(modelo);
         tabla.setRowSorter(sorter);
 
-        // ── Listeners ─────────────────────────────────────────────────────────
+        // Listeners del panel de filtros
         DocumentListener dl = new DocumentListener() {
             @Override public void insertUpdate(DocumentEvent e) { filtrar(); }
             @Override public void removeUpdate(DocumentEvent e) { filtrar(); }
@@ -72,7 +73,7 @@ public class ListaVehiculos extends JDialog implements IListaVehiculos {
         txtBusqueda.getDocument().addDocumentListener(dl);
         txtComponente.getDocument().addDocumentListener(dl);
 
-        // ── Acciones ──────────────────────────────────────────────────────────
+        // Botones y acciones
         JPanel panelAcciones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
         JButton btnCerrar = new JButton("Cerrar");
         btnCerrar.addActionListener(e -> dispose());
@@ -85,6 +86,7 @@ public class ListaVehiculos extends JDialog implements IListaVehiculos {
         setLocationRelativeTo(padre);
     }
 
+    // Función auxiliar para ejecutar búsquedas con los filtros
     private void filtrar() {
         String textoBusqueda = txtBusqueda.getText().trim().toLowerCase();
         String textoComponente = txtComponente.getText().trim().toLowerCase();

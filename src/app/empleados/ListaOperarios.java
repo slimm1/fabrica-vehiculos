@@ -23,22 +23,22 @@ public class ListaOperarios extends JDialog implements IListaEmpleados {
     private TableRowSorter<DefaultTableModel> sorter;
     private JTextField txtBusqueda;
     private IGestorTrabajadores gestorTrabajadores;
-    private final String[] tableCols = {
-            "Tipo de operario", "Nombre", "Apellidos", "DNI", "Num. Montajes"
-    };
 
+    // Inicializa la lista de operarios a partir del gestor de trabajadores.
     public ListaOperarios(Frame padre, IGestorTrabajadores gestorTrabajadores) {
         super(padre, "Listado de Trabajadores", true);
         this.gestorTrabajadores = gestorTrabajadores;
         setLayout(new BorderLayout());
         setSize(850, 550);
 
+        // Panel de búsqueda
         JPanel panelBusqueda = new JPanel(new BorderLayout(10, 10));
         panelBusqueda.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         panelBusqueda.add(new JLabel("Buscar: "), BorderLayout.WEST);
         txtBusqueda = new JTextField();
         panelBusqueda.add(txtBusqueda, BorderLayout.CENTER);
 
+        // Modelo de tabla
         this.modelo = new DefaultTableModel(
                 new String[]{"Puesto", "Nombre", "Apellidos", "DNI", "Montajes"},
                 0
@@ -53,6 +53,7 @@ public class ListaOperarios extends JDialog implements IListaEmpleados {
         sorter = new TableRowSorter<>(modelo);
         tabla.setRowSorter(sorter);
 
+        // Evento de input en campo de texto de búsqueda.
         txtBusqueda.getDocument().addDocumentListener(new DocumentListener() {
             @Override public void insertUpdate(DocumentEvent e) { filtrar(); }
             @Override public void removeUpdate(DocumentEvent e) { filtrar(); }
@@ -63,20 +64,22 @@ public class ListaOperarios extends JDialog implements IListaEmpleados {
             }
         });
 
+        // Panel de botones
         JPanel panelAcciones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
         JButton btnCerrar = new JButton("Cerrar");
         btnCerrar.addActionListener(e -> dispose());
         panelAcciones.add(btnCerrar);
 
+        //Configuración final del panel
         add(panelBusqueda, BorderLayout.NORTH);
         add(new JScrollPane(tabla), BorderLayout.CENTER);
         add(panelAcciones, BorderLayout.SOUTH);
-
         setLocationRelativeTo(padre);
         cargarDatos(new ArrayList<>(this.gestorTrabajadores.obtenerOperarios()));
     }
 
     @Override
+    // Inicializa la tabla a ñartir de la lista recibida en los parámetros.
     public void cargarDatos(List<Trabajador> empleados) {
         modelo.setRowCount(0);
         for (Trabajador t : empleados) {

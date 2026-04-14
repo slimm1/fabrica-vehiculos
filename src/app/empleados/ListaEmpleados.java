@@ -27,18 +27,21 @@ public class ListaEmpleados extends JDialog implements IListaEmpleados {
         "Tipo de empleado", "Nombre", "Apellidos", "DNI", "Dirección", "Num. SS", "Salario", "Fecha de ingreso"
     };
 
+    // Constructor. Recibe el frame padre y la implementación del gestor de trabajadores correspondiente.
     public ListaEmpleados(Frame padre, IGestorTrabajadores gestorTrabajadores) {
         super(padre, "Listado de Trabajadores", true);
         this.gestorTrabajadores = gestorTrabajadores;
         setLayout(new BorderLayout());
         setSize(850, 550);
 
+        // Panel de búsqueda. Incluye el campo de texto para buscar
         JPanel panelBusqueda = new JPanel(new BorderLayout(10, 10));
         panelBusqueda.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         panelBusqueda.add(new JLabel("Buscar: "), BorderLayout.WEST);
         txtBusqueda = new JTextField();
         panelBusqueda.add(txtBusqueda, BorderLayout.CENTER);
 
+        // Modelo de tabla de empleados
         modelo = new DefaultTableModel(this.tableCols, 0) {
             @Override
             public boolean isCellEditable(int row, int column) { return false; }
@@ -47,6 +50,7 @@ public class ListaEmpleados extends JDialog implements IListaEmpleados {
         sorter = new TableRowSorter<>(modelo);
         tabla.setRowSorter(sorter);
 
+        // Evento de input de texto en el campo de búsqueda. Filtra en la tabla las filas que coincidan
         txtBusqueda.getDocument().addDocumentListener(new DocumentListener() {
             @Override public void insertUpdate(DocumentEvent e) { filtrar(); }
             @Override public void removeUpdate(DocumentEvent e) { filtrar(); }
@@ -57,15 +61,17 @@ public class ListaEmpleados extends JDialog implements IListaEmpleados {
             }
         });
 
+        // Panel de botones
         JPanel panelAcciones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
-
         JButton btnAnadir = new JButton("Añadir Nuevo");
         JButton btnCerrar = new JButton("Cerrar");
 
+        // evento de clic en botón de nuevo empleado. Crea un nuevo Formulario y abre la ventana.
         btnAnadir.addActionListener(e -> {
             FormularioNuevoEmpleado form = new FormularioNuevoEmpleado((Frame) getParent());
             form.setVisible(true);
 
+            // Si recibimos un objeto trabajador del formulario, añadimos el nuevo Trabajador al gestor y recargamos la tabla
             if (form.getTrabajador() != null) {
                 this.gestorTrabajadores.agregarTrabajador(form.getTrabajador());
                 cargarDatos(this.gestorTrabajadores.obtenerTodosTrabajadores());
@@ -85,6 +91,7 @@ public class ListaEmpleados extends JDialog implements IListaEmpleados {
     }
 
     @Override
+    // Inicializa la tabla a partir de la lista de empleados obtenida a partir del gestor.
     public void cargarDatos(List<Trabajador> empleados) {
         modelo.setRowCount(0);
         for (Trabajador t : empleados) {
@@ -97,6 +104,7 @@ public class ListaEmpleados extends JDialog implements IListaEmpleados {
     }
 
     @Override
+    // Ordenar alfabéticamente
     public void ordenar() {
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
         sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));

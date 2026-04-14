@@ -24,6 +24,8 @@ public class CadenaMontajeUI extends JDialog {
     private final DefaultTableModel[] modelos = new DefaultTableModel[3];
     private final JTable[] tablas = new JTable[3];
 
+    // Constructor que inicializa el diálogo. Inicializa la lista de cadenas de montaje a partir de
+    // lo recibido en los parámetros.
     public CadenaMontajeUI(Frame padre, List<CadenaMontaje> cadenas) {
         super(padre, "Cadenas de Montaje", true);
         this.cadenas = cadenas;
@@ -34,18 +36,20 @@ public class CadenaMontajeUI extends JDialog {
         add(crearPanelBotones(), BorderLayout.SOUTH);
     }
 
+    // Función auxiliar para crear los paneles de las cadenas de montaje.
     private JPanel crearPanelCadenas() {
         JPanel panel = new JPanel(new GridLayout(1, 3, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
+        // Por cada cadena de montaje, crea una columna en el panel.
         for (int i = 0; i < cadenas.size(); i++) {
+            // obtener la cadena en la iteración actual
             CadenaMontaje cadena = cadenas.get(i);
             DefaultTableModel modelo = new DefaultTableModel(
                     new String[]{"Tipo Registro", "Hora", "Estado", "Trabajador"}, 0) {
                 @Override public boolean isCellEditable(int r, int c) { return false; }
             };
             modelos[i] = modelo;
-
+            // Modelo de tabla para la iteración actual
             JTable tabla = new JTable(modelo) {
                 @Override
                 public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
@@ -56,6 +60,7 @@ public class CadenaMontajeUI extends JDialog {
                 }
             };
 
+            // Evento doble click para mostrar detalles de cada registro de la cadena de montaje.
             int idx = i;
             tabla.addMouseListener(new java.awt.event.MouseAdapter() {
                 @Override
@@ -65,15 +70,15 @@ public class CadenaMontajeUI extends JDialog {
                         if (fila < 0) return;
                         int filaModelo = tabla.convertRowIndexToModel(fila);
                         Registro registro = cadenas.get(idx).getRegistros().get(filaModelo);
+                        // llamada a la función auxiliar que abre la ventana que muestra los detalles.
                         mostrarDetalles(registro);
                     }
                 }
             });
-
+            // configuraciones adicionales de de tabla y panel.
             tablas[i] = tabla;            tabla.getColumnModel().getColumn(1).setPreferredWidth(160);
             tabla.getColumnModel().getColumn(3).setPreferredWidth(160);
             tabla.setAutoCreateRowSorter(true);
-
             JPanel panelCadena = new JPanel(new BorderLayout());
             panelCadena.setBorder(BorderFactory.createTitledBorder(
                     BorderFactory.createEtchedBorder(),
@@ -83,10 +88,11 @@ public class CadenaMontajeUI extends JDialog {
 
             panel.add(panelCadena);
         }
-
+        // Devolvemos el panel con toda la configuración.
         return panel;
     }
 
+    // Función auxiliar para crear el panel de botones (Solamente con el botón de refrescar.)
     private JPanel crearPanelBotones() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         JButton btnRefrescar = new JButton("Refrescar");
@@ -95,11 +101,14 @@ public class CadenaMontajeUI extends JDialog {
         return panel;
     }
 
+    // Añade los registros correspondientes a cada cadena de montaje.
     private void cargarRegistros() {
+        // Iteramos a nivel de cadena de montaje
         for (int i = 0; i < cadenas.size(); i++) {
             DefaultTableModel modelo = modelos[i];
             modelo.setRowCount(0);
             List<Registro> registros = cadenas.get(i).getRegistros();
+            // Iteramos por cada registro de la cadena de montaje.
             for (Registro r : registros) {
                 String tipoRegistro = r instanceof RegistroError ? "ERROR" : "Montaje";
                 modelo.addRow(new Object[]{
@@ -112,22 +121,25 @@ public class CadenaMontajeUI extends JDialog {
         }
     }
 
+    // Carga los registros y muestra la ventana.
     public void mostrarVentana() {
         cargarRegistros();
         SwingUtilities.invokeLater(() -> setVisible(true));
     }
 
+    // Función auxiliar para mostrar los detalles de un registro en una nueva ventana
     private void mostrarDetalles(Registro registro) {
         JDialog dialog = new JDialog(this, "Detalles del registro", true);
         dialog.setSize(700, 300);
         dialog.setLocationRelativeTo(this);
         dialog.setLayout(new BorderLayout(10, 10));
-
+        // En el textarea se muestra el output del objeto registro recibido en los parámetros.
         JTextArea area = new JTextArea(registro.detalles());
         area.setEditable(false);
         area.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
         area.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
+        // Botón de cerrar
         JButton btnCerrar = new JButton("Cerrar");
         btnCerrar.addActionListener(e -> dialog.dispose());
         JPanel panelSur = new JPanel(new FlowLayout(FlowLayout.CENTER));
