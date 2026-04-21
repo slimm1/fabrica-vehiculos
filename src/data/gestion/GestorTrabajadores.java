@@ -44,6 +44,7 @@ public class GestorTrabajadores implements IGestorTrabajadores {
     }
 
     @Override
+    // Devuelve una lista filtrando aquellos que sean instancias de TrabajadorOperario
     public List<TrabajadorOperario> obtenerOperarios() {
         return trabajadores.values().stream()
                 .filter(t -> t instanceof TrabajadorOperario)
@@ -52,6 +53,7 @@ public class GestorTrabajadores implements IGestorTrabajadores {
     }
 
     @Override
+    // Lo mismo para los mecánicos
     public List<TrabajadorMecanicoCinta> obtenerMecanicos() {
         return trabajadores.values().stream()
                 .filter(t -> t instanceof TrabajadorMecanicoCinta)
@@ -60,6 +62,7 @@ public class GestorTrabajadores implements IGestorTrabajadores {
     }
 
     @Override
+    // Misma operación para los gestores de planta
     public TrabajadorGestorPlanta obtenerGestorPlanta() {
         return (TrabajadorGestorPlanta) trabajadores.values().stream()
                 .filter(t -> t instanceof TrabajadorGestorPlanta)
@@ -68,6 +71,7 @@ public class GestorTrabajadores implements IGestorTrabajadores {
     }
 
     @Override
+    // Recuperar el admin.
     public TrabajadorAdministrador obtenerAdministrador() {
         return (TrabajadorAdministrador) trabajadores.values().stream()
                 .filter(t -> t instanceof TrabajadorAdministrador)

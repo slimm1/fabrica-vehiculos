@@ -24,15 +24,10 @@ public interface IAlmacen {
     Rueda extraerRueda(String nombre);
     Vehiculo obtenerVehiculo(String id);
 
-    boolean hayStockMotor(String nombre, int cantidad);
-    boolean hayStockTapiceria(String nombre, int cantidad);
-    boolean hayStockRueda(String nombre, int cantidad);
-
     Map<String, Integer> obtenerResumenStockComponentes();
 
     ArrayList<Vehiculo> obtenerVehiculos();
     ArrayList<Motor> obtenerMotores();
     ArrayList<Tapiceria> obtenerTapicerias();
     ArrayList<Rueda> obtenerRuedas();
-    ArrayList<Componente> obtenerComponentes();
 }

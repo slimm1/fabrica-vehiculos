@@ -21,6 +21,7 @@ public class Almacen implements IAlmacen {
     private Map<String, Rueda>     ruedas;
     private Map<String, Vehiculo>  vehiculos;
 
+    // Inicializamos las listas vacías al construir la clase
     public Almacen() {
         this.motores    = new HashMap<>();
         this.tapicerias = new HashMap<>();
@@ -28,6 +29,7 @@ public class Almacen implements IAlmacen {
         this.vehiculos  = new HashMap<>();
     }
 
+    // Implementaciones de la interfaz.
     @Override
     public void agregarMotor(Motor motor) {
         motores.put(motor.getId(), motor);
@@ -48,7 +50,9 @@ public class Almacen implements IAlmacen {
         vehiculos.put(vehiculo.getId(), vehiculo);
     }
 
+    @Override
     public Motor extraerMotor(String id) {
+        // recuperar un motor a través de su ID
         Motor m = motores.get(id);
         if (m == null || m.getStock() <= 0) return null;
         m.setStock(m.getStock() - 1);
@@ -56,6 +60,7 @@ public class Almacen implements IAlmacen {
         return m;
     }
 
+    @Override
     public Tapiceria extraerTapiceria(String id) {
         Tapiceria t = tapicerias.get(id);
         if (t == null || t.getStock() <= 0) return null;
@@ -64,6 +69,7 @@ public class Almacen implements IAlmacen {
         return t;
     }
 
+    @Override
     public Rueda extraerRueda(String id) {
         Rueda r = ruedas.get(id);
         if (r == null || r.getStock() < 4) return null;
@@ -98,32 +104,10 @@ public class Almacen implements IAlmacen {
     }
 
     @Override
-    public ArrayList<Componente> obtenerComponentes() {
-        ArrayList<Componente> todos = new ArrayList<>();
-        todos.addAll(motores.values());
-        todos.addAll(tapicerias.values());
-        todos.addAll(ruedas.values());
-        return todos;
-    }
-
-    public boolean hayStockMotor(String id, int cantidad) {
-        Motor m = motores.get(id);
-        return m != null && m.getStock() >= cantidad;
-    }
-
-    public boolean hayStockTapiceria(String id, int cantidad) {
-        Tapiceria t = tapicerias.get(id);
-        return t != null && t.getStock() >= cantidad;
-    }
-
-    public boolean hayStockRueda(String id, int cantidad) {
-        Rueda r = ruedas.get(id);
-        return r != null && r.getStock() >= cantidad * 4;
-    }
-
-    @Override
     public Map<String, Integer> obtenerResumenStockComponentes() {
+        // Creamos un mapa de datos a partir de los datos de stock de los componentes.
         Map<String, Integer> resumen = new LinkedHashMap<>();
+        // Uso de lambdas de Java
         motores.values().forEach(m    -> resumen.put(m.getNombre(), m.getStock()));
         ruedas.values().forEach(r     -> resumen.put(r.getNombre(), r.getStock()));
         tapicerias.values().forEach(t -> resumen.put(t.getNombre(), t.getStock()));
