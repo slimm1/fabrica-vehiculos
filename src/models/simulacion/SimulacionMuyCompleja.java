@@ -82,7 +82,7 @@ public class SimulacionMuyCompleja extends SimulacionCompleja {
                 cadenaMontaje.reanudar();
             }
 
-            int tiempoPaso = robot.montarComponente(vehiculo);
+            int tiempoPaso = robot.montarComponente();
             tiempoActual += tiempoPaso;
             cadenaMontaje.incrementarPasoActual();
 

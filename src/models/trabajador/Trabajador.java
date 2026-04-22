@@ -1,6 +1,5 @@
 package models.trabajador;
 
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -18,7 +17,6 @@ public abstract class Trabajador {
     protected String numSeguridadSocial;
     protected double salario;
     protected LocalDateTime fechaIngreso;
-    private String puesto;
 
     public Trabajador(String nombre, String apellidos, String dni, String direccion,
                       String numSeguridadSocial, double salario, LocalDateTime fechaIngreso) {
@@ -45,16 +43,8 @@ public abstract class Trabajador {
         return apellidos;
     }
 
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
-    }
-
     public String getDni() {
         return dni;
-    }
-
-    public void setDni(String dni) {
-        this.dni = dni;
     }
 
     public String getDireccion() {
@@ -69,6 +59,7 @@ public abstract class Trabajador {
         return salario;
     }
 
+    // Imprimir el puesto del trabajador en función del tipo de instancia
     public String getPuesto() {
         if(this instanceof TrabajadorOperario) {
             return "Operario";

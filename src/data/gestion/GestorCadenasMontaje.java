@@ -29,8 +29,6 @@ public class GestorCadenasMontaje implements IGestorCadenasMontaje {
     private IGestorTrabajadores gestorTrabajadores;
     private List<CadenaMontaje> cadenasMontaje;
     private Queue<Vehiculo> colaVehiculos;
-    private TrabajadorAdministrador administrador;
-    private boolean sistemaActivo;
 
     // Inicializar el gestor de cadenas
     public GestorCadenasMontaje(IAlmacen almacen, IGestorTrabajadores gestorTrabajadores) {
@@ -40,23 +38,6 @@ public class GestorCadenasMontaje implements IGestorCadenasMontaje {
         this.cadenasMontaje = inicializarCadenasMontaje();
         // la cola inicialmente está vacía
         this.colaVehiculos = new LinkedList<>();
-        // recupera el admin a partir del gestor de trabajadores
-        this.administrador = gestorTrabajadores.obtenerAdministrador();
-        // inicialmente, el sistema está activo.
-        this.sistemaActivo = true;
-    }
-
-    // En caso de que haya un error, se detienen todas las cadenas de montaje
-    public void manejarError() {
-        sistemaActivo = false;
-        cadenasMontaje.forEach(CadenaMontaje::detener);
-        System.out.println("ERROR: Sistema pausado");
-    }
-
-    // Función para restaurar el sistema a partir del administrador.
-    public void restaurarSistema() {
-        administrador.restaurarSistema(gestorTrabajadores.obtenerGestorPlanta(), cadenasMontaje);
-        sistemaActivo = true;
     }
 
     public IAlmacen getAlmacen() {

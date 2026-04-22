@@ -20,7 +20,7 @@ public class SimulacionSimple extends Simulacion {
         Vehiculo vehiculo = cadenaMontaje.getVehiculo();
         while (!vehiculo.estaCompleto()) {
             Robot robot = cadenaMontaje.getRobotPorEstado(vehiculo.getEstadoActual());
-            int tiempoPaso = robot.montarComponente(vehiculo);
+            int tiempoPaso = robot.montarComponente();
             cadenaMontaje.anadirRegistro(robot.getOperario());
             tiempoActual += tiempoPaso;
 

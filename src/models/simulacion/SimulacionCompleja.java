@@ -57,7 +57,7 @@ public class SimulacionCompleja extends Simulacion {
             }
             // Después de manejar el error, continuamos con la construcción.
             // Recuperar el tiempo teórico del paso. Esta llamada también incrementa la experiencia del operario.
-            int tiempoPaso = robot.montarComponente(vehiculo);
+            int tiempoPaso = robot.montarComponente();
             tiempoActual += tiempoPaso;
             cadenaMontaje.incrementarPasoActual();
             // Logar estado en el listener
