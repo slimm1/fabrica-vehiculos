@@ -108,22 +108,24 @@ public class GestorCadenasMontaje implements IGestorCadenasMontaje {
         // Definir un mapa que asocia la instancia de cada cadena con su numero de pasos.
         Map<CadenaMontaje, Integer> pasosPorCadena = new HashMap<>();
         for (Vehiculo v : this.colaVehiculos) {
-            // por cada vehículo en cola, incialmos la cadena que corresponda y la añadimos al mapa
+            // por cada vehículo en cola, iniciamos la cadena que corresponda y la añadimos al mapa.
+            // Si el mapa ya contenía esa cola, simplemente sumamos los pasos adicionales para el vehículo
+            // de esta iteración
             CadenaMontaje cadena = obtenerCadenaDeMontaje(v);
             pasosPorCadena.merge(cadena, 4, Integer::sum);
         }
-        // Iteramos por el mapa. Cada registro tiene una cadena de montaje y un número de pasos definidos
+        // Iteramos por el mapa. Por cada cadena de montaje hay un número de pasos definidos
         pasosPorCadena.forEach((cadena, totalPasos) -> {
             // Definir el número de pasos de errores en la cadena. Como mínimo 2 por ser simulación compleja
             int numErrores = 2 + rnd.nextInt(2);
             Set<Integer> pasosConError = new HashSet<>();
             // Mientras haya hueco en el set de pasos con error, añadimos un random entre 0 y totalPasos
             while (pasosConError.size() < numErrores) {
-                // El uso de set garantiza que no haya posiciones repetidas en pasosConError
+                // El uso de set garantiza que no haya posiciones repetidas en pasosConError.
+                // Seleccionamos un paso aleatorio dentro del total de pasos para lanzar error.
                 pasosConError.add(rnd.nextInt(totalPasos));
             }
             // Seteamos las variables de errores en la instancia de cadena de montaje de esta iteración
-            cadena.setErroresALanzar(numErrores);
             cadena.setPasosConError(pasosConError);
         });
 
@@ -148,42 +150,33 @@ public class GestorCadenasMontaje implements IGestorCadenasMontaje {
         // Limpiamos cualquier estado que haya quedado de simulaciones anteriores
         cadenasMontaje.forEach(CadenaMontaje::resetearEstadoSimulacion);
 
-        // Calculamos cuántos pasos va a tener cada cadena en total.
-        // Cada vehículo aporta 3 pasos, así que simplemente contamos cuántos
-        // vehículos van a pasar por cada cadena y multiplicamos.
+        // Mismo proceso que en la simulación compleja para los pasos por cadena de montaje.
         Map<CadenaMontaje, Integer> pasosPorCadena = new HashMap<>();
         for (Vehiculo v : this.colaVehiculos) {
             CadenaMontaje cadena = obtenerCadenaDeMontaje(v);
             pasosPorCadena.merge(cadena, 3, Integer::sum);
         }
 
-        // Ahora preparamos los "eventos adversos" de cada cadena:
-        // entre 2 y 3 errores de mecánico, y exactamente 1 caída de luz.
         pasosPorCadena.forEach((cadena, totalPasos) -> {
             // Elegimos cuántos errores va a haber (2 o 3, al azar)
             int numErrores = 2 + rnd.nextInt(2);
 
             // Seleccionamos en qué pasos ocurrirán esos errores.
-            // Usamos un Set para evitar que dos errores caigan en el mismo paso.
             Set<Integer> pasosConError = new HashSet<>();
             while (pasosConError.size() < numErrores) {
                 pasosConError.add(rnd.nextInt(totalPasos));
             }
 
-            // La caída de luz tiene que caer en un paso diferente a los errores,
-            // así que seguimos sorteando hasta encontrar uno libre.
+            // El error de la caída de luz tiene que caer en un paso diferente a los otros errores,
+            // Usamos do while para seleccionar un paso aleatorio en el cual no haya ya errores.
             int pasoCaida;
             do { pasoCaida = rnd.nextInt(totalPasos); } while (pasosConError.contains(pasoCaida));
             cadena.setPasoCaida(pasoCaida);
 
-            // Le decimos a la cadena qué le espera
-            cadena.setErroresALanzar(numErrores);
             cadena.setPasosConError(pasosConError);
         });
 
-        // Procesamos los vehículos uno a uno.
-        // poll() los saca de la cola en orden FIFO y devuelve null cuando se vacía,
-        // así que el bucle se detiene solo cuando no quedan más vehículos.
+        // Misma dinámica que en la simulación compleja.
         while (!this.colaVehiculos.isEmpty()) {
             Vehiculo v = this.colaVehiculos.poll();
             CadenaMontaje cadenaMontaje = obtenerCadenaDeMontaje(v);

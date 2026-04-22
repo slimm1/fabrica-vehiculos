@@ -15,5 +15,4 @@ public abstract class Simulacion {
     }
 
     public abstract void iniciar(CadenaMontaje cadenaMontaje, SimulacionListener listener);
-    protected abstract void manejarProblemas();
 }

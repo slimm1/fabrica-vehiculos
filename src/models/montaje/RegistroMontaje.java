@@ -5,7 +5,8 @@ import models.vehiculo.EstadoVehiculo;
 import models.vehiculo.Vehiculo;
 import models.vehiculo.componente.Componente;
 
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 public class RegistroMontaje extends Registro {
 
@@ -13,15 +14,16 @@ public class RegistroMontaje extends Registro {
         super(vehiculo, componente, trabajador, estadoVehiculo);
     }
 
+    // Pinta de manera bonita el detalle del registro de montaje a partir de esta instancia
     @Override
     public String detalles() {
         return "🔩 REGISTRO DE MONTAJE\n"
                 + "-----------------------------------------------------------\n"
-                + "🕐 Timestamp:   " + timestamp.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")) + "\n"
-                + "🚗 Vehículo:    " + vehiculo.toString() + "\n"
-                + "🔩 Estado:      " + estadoVehiculo.getNombre() + "\n"
-                + "🔧 Componente:  " + (componente != null ? componente.getNombre() : "—") + "\n"
-                + "👷 Operario:    " + trabajador.getNombre() + " " + trabajador.getApellidos() + "\n"
-                + "📋 Puesto:      " + trabajador.getPuesto();
+                + "🕐 Timestamp:   " + this.timestamp.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")) + "\n"
+                + "🚗 Vehículo:    " + this.vehiculo.toString() + "\n"
+                + "🔩 Estado:      " + this.estadoVehiculo.getNombre() + "\n"
+                + "🔧 Componente:  " + (this.componente != null ? this.componente.getNombre() : "—") + "\n"
+                + "👷 Operario:    " + this.trabajador.getNombre() + " " + this.trabajador.getApellidos() + "\n"
+                + "📋 Puesto:      " + this.trabajador.getPuesto();
     }
 }

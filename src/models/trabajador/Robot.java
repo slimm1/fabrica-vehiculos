@@ -25,7 +25,6 @@ public class Robot {
 
     public int montarComponente(Vehiculo vehiculo) {
         operario.trabajar();
-        vehiculo.cambiarEstado();
         return operario.getTiempoTarea();
     }
 

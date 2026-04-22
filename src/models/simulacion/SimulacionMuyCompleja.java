@@ -15,56 +15,68 @@ import java.util.List;
  * error de mecánico, resolviendo ambos eventos antes de montar el componente.
  */
 public class SimulacionMuyCompleja extends SimulacionCompleja {
-    private int caidas;
 
     public SimulacionMuyCompleja(GestorCadenasMontaje sistema) {
         super(sistema);
-        this.caidas = 0;
     }
 
     public void iniciar(CadenaMontaje cadenaMontaje, SimulacionListener listener) {
+        // obtener el vehículo actual en la cadena de montaje.
         Vehiculo vehiculo = cadenaMontaje.getVehiculo();
+        // Obtener mecánicos y admin
         List<TrabajadorMecanicoCinta> mecanicos = gestorCadenasMontaje.getGestorTrabajadores().obtenerMecanicos();
         TrabajadorAdministrador admin = gestorCadenasMontaje.getGestorTrabajadores().obtenerAdministrador();
 
+        // Mientras el vehículo esté sin terminar, iteramos.
         while (!vehiculo.estaCompleto()) {
+            // obtener el robot correspondiente al vehículo
             Robot robot = cadenaMontaje.getRobotPorEstado(vehiculo.getEstadoActual());
-            cadenaMontaje.anadirRegistro(robot.getOperario());
 
+            // si hay caída de sistema en este paso...
             if (cadenaMontaje.hayCaidaEnPasoActual()) {
+                // detenemos la cadena
                 cadenaMontaje.detener();
-                if (listener != null) {
-                    listener.onPaso(cadenaMontaje.toString(), vehiculo.getId(), vehiculo.getEstadoActual());
-                    listener.onPaso("⚡ APAGÓN en " + cadenaMontaje.getTipo()
-                                    + " — Administrador: " + admin.getNombre()
-                                    + " restaurando sistema (5s)...",
-                            vehiculo.getId(), vehiculo.getEstadoActual());
-                }
+                // Logar estado del sistema...
+                listener.onPaso(cadenaMontaje.toString(), vehiculo.getId(), vehiculo.getEstadoActual());
+                listener.onPaso("⚡ APAGÓN en " + cadenaMontaje.getTipo()
+                                + " — Administrador: " + admin.getNombre()
+                                + " restaurando sistema (5s)...",
+                        vehiculo.getId(), vehiculo.getEstadoActual());
+
+                // parar la ejecución mientras se restaura el sistema
                 try { Thread.sleep(5000); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
-                if (listener != null) {
-                    listener.onPaso("✅ Sistema restaurado por " + admin.getNombre(),
-                            vehiculo.getId(), vehiculo.getEstadoActual());
-                }
+
+                // Logar info después de restaurar.
+                listener.onPaso("✅ Sistema restaurado por " + admin.getNombre(),
+                        vehiculo.getId(), vehiculo.getEstadoActual());
+
+                // Registrar error y continuar
                 cadenaMontaje.anadirRegistro(admin);
                 cadenaMontaje.reanudar();
             }
 
             // Error de mecánico
             if (cadenaMontaje.hayErrorEnPasoActual()) {
+                // se detiene la cadena de montaje...
                 cadenaMontaje.detener();
+                // cogemos un mecánico al azar
                 TrabajadorMecanicoCinta mecanico = mecanicos.get((int)(Math.random() * mecanicos.size()));
+                // Le hacemos trabajar, incrementando su experiencia
                 int tiempoReparacion = mecanico.getTiempoReparacion();
                 mecanico.trabajar();
-                cadenaMontaje.anadirRegistro(mecanico);
+                // Incremental el tiempo actual de la simulacion con el tiempo que tardó el mecánico en reparar.
                 tiempoActual += tiempoReparacion;
-                if (listener != null) {
-                    listener.onPaso(cadenaMontaje.toString(), vehiculo.getId(), vehiculo.getEstadoActual());
-                    listener.onPaso("⚠ ERROR en " + cadenaMontaje.getTipo()
-                                    + " — Reparando con " + mecanico.getNombre()
-                                    + " " + mecanico.getApellidos()
-                                    + " (" + mecanico.getPuesto() + ") — " + tiempoReparacion + "s",
-                            vehiculo.getId(), vehiculo.getEstadoActual());
-                }
+                // Añadimos el registro de error.
+                cadenaMontaje.anadirRegistro(mecanico);
+                // Ejecutamos el listener para logar el error. Los elementos de la UI que escuchan, actualizarán sus componentes con estos logs.
+                listener.onPaso(cadenaMontaje.toString(), vehiculo.getId(), vehiculo.getEstadoActual());
+                listener.onPaso("⚠ ERROR en " + cadenaMontaje.getTipo()
+                                + " — Reparando con " + mecanico.getNombre()
+                                + " (" + mecanico.getPuesto() + ") — "
+                                + tiempoReparacion + "s",
+                        vehiculo.getId(), vehiculo.getEstadoActual());
+
+                // La ejecución se detiene durante el tiempo de la reparación...
                 try { Thread.sleep(tiempoReparacion * 1000L); }
                 catch (InterruptedException e) { Thread.currentThread().interrupt(); }
                 cadenaMontaje.reanudar();
@@ -74,37 +86,13 @@ public class SimulacionMuyCompleja extends SimulacionCompleja {
             tiempoActual += tiempoPaso;
             cadenaMontaje.incrementarPasoActual();
 
-            if (listener != null) {
-                listener.onPaso(cadenaMontaje.toString(), vehiculo.getId(), vehiculo.getEstadoActual());
-            }
+            listener.onPaso(cadenaMontaje.toString(), vehiculo.getId(), vehiculo.getEstadoActual());
+            vehiculo.cambiarEstado();
+            cadenaMontaje.anadirRegistro(robot.getOperario());
 
             try { Thread.sleep(tiempoPaso * 1000L); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
         }
 
         gestorCadenasMontaje.getAlmacen().agregarVehiculo(vehiculo);
-    }
-
-    @Override
-    protected void manejarProblemas() {
-        if (Math.random() < 0.1 && caidas < 1) {
-            generarCaidaSistema();
-            caidas++;
-        }
-
-        super.manejarProblemas();
-    }
-
-    private void generarCaidaSistema() {
-        System.out.println("¡APAGÓN! Sistema en pausa...");
-        gestorCadenasMontaje.manejarError();
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-
-        gestorCadenasMontaje.restaurarSistema();
-        System.out.println("Sistema restaurado");
     }
 }

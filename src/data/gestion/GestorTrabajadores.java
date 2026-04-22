@@ -29,16 +29,6 @@ public class GestorTrabajadores implements IGestorTrabajadores {
     }
 
     @Override
-    public void eliminarTrabajador(String dni) {
-        trabajadores.remove(dni);
-    }
-
-    @Override
-    public Trabajador obtenerTrabajador(String dni) {
-        return trabajadores.get(dni);
-    }
-
-    @Override
     public List<Trabajador> obtenerTodosTrabajadores() {
         return new ArrayList<>(trabajadores.values());
     }

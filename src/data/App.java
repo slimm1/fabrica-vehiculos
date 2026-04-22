@@ -40,17 +40,22 @@ public class App {
     IGestorCadenasMontaje gestorCadenasMontaje;
 
     public App() {
-        // 1. Crear almacén
+        // Crear y llenar el almacén
         this.almacen = new Almacen();
-        llenarAlmacen(this.almacen);
+        this.llenarAlmacen(this.almacen);
 
+        // Crear y llenar el gestor de trabajadores
         this.gestorTrabajadores = new GestorTrabajadores();
-        crearTrabajadores(this.gestorTrabajadores);
+        this.crearTrabajadores(this.gestorTrabajadores);
 
+        // Crear el gestor de cadenas de montaje con el almacén y el gestor de trabajadores.
         this.gestorCadenasMontaje = new GestorCadenasMontaje(this.almacen, this.gestorTrabajadores);
     }
 
-    private static void crearTrabajadores(IGestorTrabajadores gestor) {
+    // Función auxiliar para llenar el gestor de trabajadores con datos de prueba.
+    private void crearTrabajadores(IGestorTrabajadores gestor) {
+
+        // Operarios
         gestor.agregarTrabajador(
                 new TrabajadorOperario("Juan", "García", "12345678A", "Calle 1",
                         "SS123456", 1500, LocalDateTime.now(), (int)(Math.random() * 20) + 1)
@@ -63,7 +68,6 @@ public class App {
                 new TrabajadorOperario("Luis", "Sánchez", "44444444F", "Calle 6",
                         "SS444444", 1500, LocalDateTime.now().minusYears(1), (int)(Math.random() * 20) + 1)
         );
-
         gestor.agregarTrabajador(
                 new TrabajadorOperario("Elena", "Ruiz", "55555555G", "Calle 7",
                         "SS555555", 1700, LocalDateTime.now().minusYears(2), (int)(Math.random() * 20) + 1)
@@ -73,16 +77,19 @@ public class App {
                         "SS666666", 1700, LocalDateTime.now().minusYears(3), (int)(Math.random() * 20) + 1)
         );
 
+        // Gestor de planta
         gestor.agregarTrabajador(
                 new TrabajadorGestorPlanta("María", "López", "87654321B", "Calle 2",
                         "SS654321", 2000, LocalDateTime.now())
         );
 
+        //Admin
         gestor.agregarTrabajador(
                 new TrabajadorAdministrador("Carlos", "Martínez", "11111111C", "Calle 3",
                         "SS111111", 2200, LocalDateTime.now())
         );
 
+        // Mecánicos
         gestor.agregarTrabajador(
                 new TrabajadorMecanicoCinta("Pedro", "Fernández", "22222222D", "Calle 4",
                         "SS222222", 1800, LocalDateTime.now())
@@ -91,7 +98,6 @@ public class App {
                 new TrabajadorMecanicoCinta("Rosa", "Jiménez", "77777777I", "Calle 9",
                         "SS777777", 1800, LocalDateTime.now().minusMonths(3))
         );
-
         gestor.agregarTrabajador(
                 new TrabajadorMecanicoCinta("Jorge", "Moreno", "88888888J", "Calle 10",
                         "SS888888", 1950, LocalDateTime.now().minusYears(4))
@@ -102,15 +108,18 @@ public class App {
         );
     }
 
-    private static void llenarAlmacen(IAlmacen almacen) {
+    // Función auxiliar para rellenar la instancia del Almacén pasada en los parámetros con datos de prueba
+    private void llenarAlmacen(IAlmacen almacen) {
         Random rnd = new Random();
 
+        // entre 5 y 14 motores
         int cantMotores = rnd.nextInt(10) + 5;
         for (int i = 0; i < cantMotores; i++) {
+            // aleatorizar el tipo de motor, cv y el stock
             int tipo = rnd.nextInt(3);
             int cv = 100 + rnd.nextInt(200);
             int stock = 1 + rnd.nextInt(10);
-
+            // instanciar motor según tipo y añadir al almacén
             switch (tipo) {
                 case 0 -> almacen.agregarMotor(new MotorElectrico(stock, cv, 150, 4));
                 case 1 -> almacen.agregarMotor(new MotorGasolina(stock, cv + 50, 180, 6));
@@ -118,9 +127,12 @@ public class App {
             }
         }
 
+        // Rango de colores
         String[] colores = {"Negro", "Beige", "Gris", "Marrón", "Rojo"};
+        // Entre 5 y 14 tapicerías
         int cantTapicerias = rnd.nextInt(10) + 5;
         for (int i = 0; i < cantTapicerias; i++) {
+            // misma dinámica que antes
             int tipo = rnd.nextInt(3);
             String color = colores[rnd.nextInt(colores.length)];
             int precio = 20 + rnd.nextInt(20);
@@ -133,8 +145,10 @@ public class App {
             }
         }
 
+        // entre 10 y 29 ruedas
         int cantRuedas = rnd.nextInt(20) + 10;
         for (int i = 0; i < cantRuedas; i++) {
+            // misma dinámica que antes
             int tipo = rnd.nextInt(3);
             int ancho = 195 + (rnd.nextInt(5) * 10);
             int llanta = 15 + rnd.nextInt(5);
@@ -147,11 +161,13 @@ public class App {
             }
         }
 
+        // de 3 a 7 vehículos ya terminados en stock
         int cantVehiculosTerminados = rnd.nextInt(5) + 3;
 
         for (int i = 0; i < cantVehiculosTerminados; i++) {
             ArrayList<Componente> comps = new ArrayList<>();
 
+            // Motor aleatorio
             int cv = 80 + rnd.nextInt(300);
             switch (rnd.nextInt(3)) {
                 case 0 -> comps.add(new MotorElectrico(1, cv, 150, 4));
@@ -159,6 +175,7 @@ public class App {
                 case 2 -> comps.add(new MotorHibrido(1, cv, 180, 4));
             }
 
+            // Tapiz aleatorio
             String colTapiz = colores[rnd.nextInt(colores.length)];
             switch (rnd.nextInt(3)) {
                 case 0 -> comps.add(new TapiceriaTela(1, colTapiz, 20));
@@ -166,12 +183,14 @@ public class App {
                 case 2 -> comps.add(new TapiceriaAlcantara(1, colTapiz, 35));
             }
 
+            //Ruedas aleatorias
             switch (rnd.nextInt(3)) {
                 case 0 -> comps.add(new RuedaNormal(4, 205, 16, 800, 190));
                 case 1 -> comps.add(new RuedaDeportivo(4, 245, 19, 900, 280));
                 case 2 -> comps.add(new RuedaTodoterreno(4, 225, 17, 1200, 170));
             }
 
+            // Color y tipo aleatorio
             Vehiculo v;
             String colorCoche = colores[rnd.nextInt(colores.length)];
             int tipoV = rnd.nextInt(3);
@@ -183,15 +202,12 @@ public class App {
                 default -> null;
             };
 
-            if (v != null) {
-                while (!v.estaCompleto()) {
-                    v.cambiarEstado();
-                }
-                almacen.agregarVehiculo(v);
+            // Bucle para setear el estado del vehículo a terminado.
+            while (!v.estaCompleto()) {
+                v.cambiarEstado();
             }
+            almacen.agregarVehiculo(v);
         }
-
-        System.out.println("Almacén inicializado con stock aleatorio.");
     }
 
     public IGestorTrabajadores getGestorTrabajadores() {
@@ -206,6 +222,7 @@ public class App {
         return gestorCadenasMontaje;
     }
 
+    // inicializa la app, con el dashboard pasándole esta instancia de la app
     public void startApp() {
         IDashboard dashboard = new Dashboard(this);
         dashboard.init();

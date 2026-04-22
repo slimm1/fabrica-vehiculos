@@ -20,51 +20,56 @@ public class SimulacionCompleja extends Simulacion {
     }
 
     public void iniciar(CadenaMontaje cadenaMontaje, SimulacionListener listener) {
+        // Obtener vehículo actual en la cadena de montaje
         Vehiculo vehiculo = cadenaMontaje.getVehiculo();
+        // obtener mecánicos
         List<TrabajadorMecanicoCinta> mecanicos = gestorCadenasMontaje.getGestorTrabajadores().obtenerMecanicos();
 
+        // Mientras el estado del vehículo no este completo, iteramos
         while (!vehiculo.estaCompleto()) {
+            // recuperar el robot correspondiente al paso actual de la cadena a partir del estado del vehículo
             Robot robot = cadenaMontaje.getRobotPorEstado(vehiculo.getEstadoActual());
-            int tiempoPaso = robot.montarComponente(vehiculo);
-            cadenaMontaje.anadirRegistro(robot.getOperario());
-            tiempoActual += tiempoPaso;
-
+            // Si en este paso había programado un error
             if (cadenaMontaje.hayErrorEnPasoActual()) {
+                // se detiene la cadena de montaje...
                 cadenaMontaje.detener();
+                // cogemos un mecánico al azar
                 TrabajadorMecanicoCinta mecanico = mecanicos.get((int)(Math.random() * mecanicos.size()));
+                // Le hacemos trabajar, incrementando su experiencia
                 int tiempoReparacion = mecanico.getTiempoReparacion();
                 mecanico.trabajar();
+                // Incremental el tiempo actual de la simulacion con el tiempo que tardó el mecánico en reparar.
                 tiempoActual += tiempoReparacion;
+                // Añadimos el registro de error.
                 cadenaMontaje.anadirRegistro(mecanico);
-                if (listener != null) {
-                    listener.onPaso(cadenaMontaje.toString(), vehiculo.getId(), vehiculo.getEstadoActual());
-                    listener.onPaso("⚠ ERROR en " + cadenaMontaje.getTipo()
-                                    + " — Reparando con " + mecanico.getNombre()
-                                    + " (" + mecanico.getPuesto() + ") — "
-                                    + tiempoReparacion + "s",
-                            vehiculo.getId(), vehiculo.getEstadoActual());
-                }
+                // Ejecutamos el listener para logar el error. Los elementos de la UI que escuchan, actualizarán sus componentes con estos logs.
+                listener.onPaso(cadenaMontaje.toString(), vehiculo.getId(), vehiculo.getEstadoActual());
+                listener.onPaso("⚠ ERROR en " + cadenaMontaje.getTipo()
+                                + " — Reparando con " + mecanico.getNombre()
+                                + " (" + mecanico.getPuesto() + ") — "
+                                + tiempoReparacion + "s",
+                        vehiculo.getId(), vehiculo.getEstadoActual());
 
+                // La ejecución se detiene durante el tiempo de la reparación...
                 try { Thread.sleep(tiempoReparacion * 1000L); }
                 catch (InterruptedException e) { Thread.currentThread().interrupt(); }
                 cadenaMontaje.reanudar();
             }
-
+            // Después de manejar el error, continuamos con la construcción.
+            // Recuperar el tiempo teórico del paso. Esta llamada también incrementa la experiencia del operario.
+            int tiempoPaso = robot.montarComponente(vehiculo);
+            tiempoActual += tiempoPaso;
             cadenaMontaje.incrementarPasoActual();
-
-            if (listener != null) {
-                listener.onPaso(cadenaMontaje.toString(), vehiculo.getId(), vehiculo.getEstadoActual());
-            }
-
+            // Logar estado en el listener
+            listener.onPaso(cadenaMontaje.toString(), vehiculo.getId(), vehiculo.getEstadoActual());
+            vehiculo.cambiarEstado();
+            cadenaMontaje.anadirRegistro(robot.getOperario());
+            // dormir el hilo mientras se ensambla el componente
             try { Thread.sleep(tiempoPaso * 1000L); }
             catch (InterruptedException e) { Thread.currentThread().interrupt(); }
         }
 
+        // Finalmente, añadimos el vehículo al almacén.
         gestorCadenasMontaje.getAlmacen().agregarVehiculo(vehiculo);
-    }
-
-    @Override
-    protected void manejarProblemas() {
-        // Gestionado inline en iniciar()
     }
 }

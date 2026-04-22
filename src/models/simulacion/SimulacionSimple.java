@@ -36,9 +36,4 @@ public class SimulacionSimple extends Simulacion {
         }
         gestorCadenasMontaje.getAlmacen().agregarVehiculo(vehiculo);
     }
-
-    @Override
-    protected void manejarProblemas() {
-        // No hay problemas en simulación simple
-    }
 }
