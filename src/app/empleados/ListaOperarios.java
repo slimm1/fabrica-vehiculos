@@ -48,6 +48,10 @@ public class ListaOperarios extends JDialog implements IListaEmpleados {
                 if (column == 4) return Integer.class;
                 return String.class;
             }
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
         };
         tabla = new JTable(modelo);
         sorter = new TableRowSorter<>(modelo);
